@@ -120,32 +120,18 @@ proc basic_macro_placement {args} {
 }
 
 proc run_placement {args} {
-	puts "\[INFO\]: Running Placement..."
+	puts_info "Running Placement..."
 # |----------------------------------------------------|
 # |----------------   3. PLACEMENT   ------------------|
 # |----------------------------------------------------|
 	set ::env(CURRENT_STAGE) placement
 
-	global_placement
+	global_placement_or
+
 	if { $::env(RUN_RESIZER_OVERBUFFER) == 1} {
 		repair_wire_length
 	}
-	#try_catch replace < $::env(SCRIPTS_DIR)/replace_io.tcl |& tee $::env(TERMINAL_OUTPUT) $::env(replaceio_log_file_tag).log
-	#try_catch Psn --verbose --file $::env(SCRIPTS_DIR)/psn.tcl |& tee /dev/tty $::env(psn_log_file_tag).log
 
-	# GIFing the result
-	#puts "Generating Placement GIF"
-	#try_catch convert -delay 20 {*}[lsort [glob $::env(RESULTS_DIR)/4_placement/etc/3_floorplanning/output/cell/*.jpg]] \
-		-delay 100 $::env(RESULTS_DIR)/4_placement/etc/3_floorplanning/output/globalPlaceResult.jpg \
-		\
-		$::env(RESULTS_DIR)/4_placement.gif \
-		|& tee $::env(TERMINAL_OUTPUT)
-
-	#try_catch cp $::env(RESULTS_DIR)/4_placement/etc/3_floorplanning/output/3_floorplan_final.def $::env(RESULTS_DIR)/4_1_place_gp.def
-
-	# outputs: 4_1_place_gp.def
-
-	# detailed 4_placement
 	detailed_placement
 }
 

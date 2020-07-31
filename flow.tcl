@@ -24,6 +24,9 @@ proc run_non_interactive_mode {args} {
 	set options {\
 	    {-design required}\
 	    {-save_path optional}\
+	    {-no_lvs optional}\
+	    {-no_drc optional}\
+	    {-no_antennacheck optional}\
 	}
 	set flags {-save}
 	parse_key_args "run_non_interactive_mode" args_copy arg_values $options flags_map $flags
@@ -33,30 +36,19 @@ proc run_non_interactive_mode {args} {
 	run_synthesis
 	run_floorplan
 	run_placement
-	run_cts
-	gen_pdn
-	run_routing
+	if {$::env(CLOCK_TREE_SYNTH)} {
+	    run_cts
+	}
 
-	run_magic_spice_export
+	run_routing
 
 	if { $::env(DIODE_INSERTION_STRATEGY) == 2 } {
 	    run_magic_antenna_check; # produces a report of violators; extraction!
-	    heal_antenna_violators; # modifies the routed DEF
++	    heal_antenna_violators; # modifies the routed DEF (fake diode strategy)
 	}
 
 	run_magic
 
-	run_magic_drc
-	run_netgen
-	run_magic_antenna_check; # to verify the above and get a final report
-
-
-
-
-
-	#export_magic_view \
-		-def $::env(CURRENT_DEF) \
-		-output $::env(magic_result_file_tag).mag
 	if {  [info exists flags_map(-save) ] } {
 		if { [info exists arg_values(-save_path)] } {
 			save_views 	-lef_path $::env(magic_result_file_tag).lef \
@@ -72,6 +64,20 @@ proc run_non_interactive_mode {args} {
 					-gds_path $::env(magic_result_file_tag).gds \
 					-tag $::env(RUN_TAG)
 			}
+	}
+
+	# Physical Verification
+	if {  ! [info exists flags_map(-no_drc) ] } {
+	    run_magic_drc
+	}
+
+	if {  ! [info exists flags_map(-no_lvs) ] } {
+	    run_magic_spice_export
+	    run_netgen
+	}
+
+	if {  ! [info exists flags_map(-no_antennacheck) ] } {
+	    run_magic_antenna_check; # to verify the above and get a final report
 	}
 }
 

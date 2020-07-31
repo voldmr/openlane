@@ -65,26 +65,28 @@ proc simple_cts {args} {
 
 
 proc run_cts {args} {
-		puts "\[INFO\]: Running TritonCTS..."
-		if {$::env(CLOCK_TREE_SYNTH)} {
-			set ::env(CURRENT_STAGE) cts
-			TIMER::timer_start		
-			
-			set ::env(SAVE_DEF) $::env(cts_result_file_tag).def
-			try_catch openroad -exit $::env(SCRIPTS_DIR)/openroad/or_cts.tcl |& tee $::env(TERMINAL_OUTPUT) $::env(cts_log_file_tag).log
-			
-			TIMER::timer_stop
-			exec echo "[TIMER::get_runtime]" >> $::env(cts_log_file_tag)_runtime.txt
+	set ::env(CURRENT_STAGE) cts
 
-			set_def $::env(SAVE_DEF)
-			set_netlist $::env(yosys_result_file_tag)_cts.v
-			if { $::env(LEC_ENABLE) } {
-				logic_equiv_check -rhs $::env(PREV_NETLIST) -lhs $::env(CURRENT_NETLIST)
-			}
-		} else {
-			exec echo "SKIPPED!" >> $::env(cts_log_file_tag).log
-		}
+	puts_info "Running Clock Tree Synthesis..."
 
+	TIMER::timer_start
+
+	set ::env(SAVE_DEF) $::env(cts_result_file_tag).def
+	try_catch openroad -exit $::env(SCRIPTS_DIR)/openroad/or_cts.tcl \
+		|& tee $::env(TERMINAL_OUTPUT) $::env(cts_log_file_tag).log
+
+	TIMER::timer_stop
+	exec echo "[TIMER::get_runtime]" >> $::env(cts_log_file_tag)_runtime.txt
+
+	set_def $::env(SAVE_DEF)
+	set_netlist $::env(yosys_result_file_tag)_cts.v
+
+	if { $::env(LEC_ENABLE) } {
+		logic_equiv_check -rhs $::env(PREV_NETLIST) -lhs $::env(CURRENT_NETLIST)
+	}
+
+	# legalize
+	detailed_placement
 }
 
 package provide openlane 0.9

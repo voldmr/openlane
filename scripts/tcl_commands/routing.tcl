@@ -103,16 +103,18 @@ proc run_routing {args} {
 # |----------------   5. ROUTING ----------------------|
 # |----------------------------------------------------|
 	set ::env(CURRENT_STAGE) routing
-	if { $::env(DIODE_INSERTION_STRATEGY) > 0  && [info exists ::env(DIODE_CELL)] } {
-		if { $::env(DIODE_CELL) ne "" } {
-			ins_diode_cells
-		}
+	if { $::env(DIODE_INSERTION_STRATEGY) > 0 \
+		&& [info exists ::env(DIODE_CELL)] \
+		&& $::env(DIODE_CELL) != "" \
+	} {
+		ins_diode_cells
+		# this legalizes as well, for now... (otherwise, issues with util)
 	}
+
 	use_original_lefs
+
 	# insert fill_cells
 	ins_fill_cells_or
-	# fastroute global 6_routing
-	# li1_hack_start
 
 	# for LVS
 	write_verilog $::env(yosys_result_file_tag)_preroute.v
@@ -121,10 +123,7 @@ proc run_routing {args} {
 		logic_equiv_check -rhs $::env(PREV_NETLIST) -lhs $::env(CURRENT_NETLIST)
 	}
 
-
 	global_routing_or
-	# li1_hack_end
-
 
 	# detailed routing
 	detailed_routing
@@ -149,7 +148,7 @@ proc run_routing {args} {
 }
 
 proc gen_pdn {args} {
-	puts "\[INFO\]: Generating PDN..."
+	puts_info "Generating PDN..."
 	TIMER::timer_start
 	if {![info exists ::env(PDN_CFG)]} {
 		set ::env(PDN_CFG) $::env(PDK_ROOT)/$::env(PDK)/libs.tech/openlane/common_pdn.tcl

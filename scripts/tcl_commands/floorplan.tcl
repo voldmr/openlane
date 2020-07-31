@@ -173,13 +173,13 @@ proc run_floorplan {args} {
 	# place io
 	place_io
 
-#	# pdn generation
-#	gen_pdn
-
 	# tapcell
 	if {[info exists  ::env(FP_WELLTAP_CELL)] && $::env(FP_WELLTAP_CELL) ne ""} { 
 		tap_decap_or
 	}
+
+	# pdn generation
+	gen_pdn
 }
 
 package provide openlane 0.9
