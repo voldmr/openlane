@@ -75,14 +75,14 @@ jobs:
 
 before_install:
   - sh if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
-      sh travisCI/travisPrebuild.sh magic;
+      ./travisCI/travisPrebuild.sh magic;
     else;
       echo "Skipping pre-install";
     fi
 
 install:
-  - sh if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
-      sh travisCI/travisBuildLatest.sh;
+  - sh if [ $TRAVIS_BRANCH == "develop_latest_pdk" && $TRAVIS_PULL_REQUEST == "false" ]; then
+      ./travisCI/travisBuildLatest.sh;
     else;
       sh travisCI/travisBuild.sh;
     fi
