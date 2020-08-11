@@ -52,7 +52,11 @@ jobs:
       env: TEST_SET=slowestTestSet
 
 install:
-  - sh travisCI/travisBuild.sh
-
+  - if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
+      sh travisCI/travisBuildLatest.sh;
+    else;
+      sh travisCI/travisBuild.sh;
+    fi
+    
 script:
   - bash travisCI/travisTest.sh $TEST_SET  
