@@ -1,3 +1,7 @@
 [submodule "docker_build/docker/magic/magic"]
 	path = docker_build/docker/magic/magic
 	url = git://opencircuitdesign.com/magic
+[submodule "docker_build/docker/openroad_flow/OpenROAD"]
+	path = docker_build/docker/openroad_flow/OpenROAD
+	url = https://github.com/The-OpenROAD-Project/OpenROAD
+	branch = openroad
