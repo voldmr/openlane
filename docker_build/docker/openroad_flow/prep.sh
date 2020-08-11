@@ -1,6 +1,5 @@
 OPENLANE_DIR=$1
-git submodule update --init $OPENLANE_DIR/docker_build/docker/openroad_flow/OpenROAD
-cd docker/openroad_flow/OpenROAD
+cd $OPENLANE_DIR/docker_build/docker/openroad_flow/OpenROAD
 git submodule update --init --recursive
 cd ..
 cp rails.patch OpenROAD/
@@ -14,3 +13,4 @@ git apply pdn_export_pin.patch
 git apply pdn_gen_core_ring_fix.patch
 cd src/OpenDB/src/swig/python 
 git apply setup_local.patch
+echo "Done preparing OpenROAD"

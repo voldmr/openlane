@@ -29,63 +29,55 @@ os:
 jobs:
   include:
     - name: "Base Test Magic"
-      env: TEST_SET=spm
+      env: TEST_SET=spm TOOL=magic REPO=magic BRANCH=master
     - name: "Fastest Test Set Magic"
-      env: TEST_SET=fastestTestSet
+      env: TEST_SET=fastestTestSet TOOL=magic REPO=magic BRANCH=master
     - name: "Typical Test Set 1 Magic"
-      env: TEST_SET=typicalTestSet1
+      env: TEST_SET=typicalTestSet1 TOOL=magic REPO=magic BRANCH=master
     - name: "Typical Test Set 2 Magic"
-      env: TEST_SET=typicalTestSet2
+      env: TEST_SET=typicalTestSet2 TOOL=magic REPO=magic BRANCH=master
     - name: "BM64 Magic"
-      env: TEST_SET=BM64
+      env: TEST_SET=BM64 TOOL=magic REPO=magic BRANCH=master
     - name: "picorv32a Magic"
-      env: TEST_SET=picorv32a
+      env: TEST_SET=picorv32a TOOL=magic REPO=magic BRANCH=master
     - name: "chacha Magic"
-      env: TEST_SET=chacha
+      env: TEST_SET=chacha TOOL=magic REPO=magic BRANCH=master
     - name: "des Magic"
-      env: TEST_SET=des
+      env: TEST_SET=des TOOL=magic REPO=magic BRANCH=master
     - name: "md5 Magic"
-      env: TEST_SET=md5
+      env: TEST_SET=md5 TOOL=magic REPO=magic BRANCH=master
     - name: "PPU Magic"
-      env: TEST_SET=PPU
+      env: TEST_SET=PPU TOOL=magic REPO=magic BRANCH=master
     - name: "Slowest Test Set Magic"
-      env: TEST_SET=slowestTestSet
+      env: TEST_SET=slowestTestSet TOOL=magic REPO=magic BRANCH=master
     - name: "Base Test OpenROAD"
-      env: TEST_SET=spm
+      env: TEST_SET=spm TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Fastest Test Set OpenROAD"
-      env: TEST_SET=fastestTestSet
+      env: TEST_SET=fastestTestSet TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Typical Test Set 1 OpenROAD"
-      env: TEST_SET=typicalTestSet1
+      env: TEST_SET=typicalTestSet1 TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Typical Test Set 2 OpenROAD"
-      env: TEST_SET=typicalTestSet2
+      env: TEST_SET=typicalTestSet2 TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "BM64 OpenROAD"
-      env: TEST_SET=BM64
+      env: TEST_SET=BM64 TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "picorv32a OpenROAD"
-      env: TEST_SET=picorv32a
+      env: TEST_SET=picorv32a TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "chacha OpenROAD"
-      env: TEST_SET=chacha
+      env: TEST_SET=chacha TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "des OpenROAD"
-      env: TEST_SET=des
+      env: TEST_SET=des TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "md5 OpenROAD"
-      env: TEST_SET=md5
+      env: TEST_SET=md5 TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "PPU OpenROAD"
-      env: TEST_SET=PPU
+      env: TEST_SET=PPU TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Slowest Test Set OpenROAD"
-      env: TEST_SET=slowestTestSet
+      env: TEST_SET=slowestTestSet TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
 
 before_install:
-  - sh if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
-      ./travisCI/travisPrebuild.sh magic;
-    else;
-      echo "Skipping pre-install";
-    fi
-
+  - sh ./travisCI/travisPrebuild.sh $TOOL;
+  
 install:
-  - sh if [ $TRAVIS_BRANCH == "develop_latest_pdk" && $TRAVIS_PULL_REQUEST == "false" ]; then
-      ./travisCI/travisBuildLatest.sh;
-    else;
-      sh travisCI/travisBuild.sh;
-    fi
+  - sh travisCI/travisBuild.sh;
     
 script:
   - bash travisCI/travisTest.sh $TEST_SET  
