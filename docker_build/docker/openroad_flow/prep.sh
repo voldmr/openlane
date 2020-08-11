@@ -1,3 +1,4 @@
+OPENLANE_DIR=$1
 git submodule update --init $OPENLANE_DIR/docker_build/docker/openroad_flow/OpenROAD
 cd docker/openroad_flow/OpenROAD
 git submodule update --init --recursive
