@@ -28,19 +28,60 @@ os:
 
 jobs:
   include:
-    - stage: "Magic"
-      - name: "Base Test Magic"
-        env: TEST_SET=spm
-      - name: "Fastest Test Set Magic"
-        env: TEST_SET=fastestTestSet
-    - stage: "openROAD"
-      - name: "Base Test openROAD"
-        env: TEST_SET=spm
-      - name: "Fastest Test Set openROAD"
-        env: TEST_SET=fastestTestSet
-  
+    - name: "Base Test Magic"
+      env: TEST_SET=spm
+    - name: "Fastest Test Set Magic"
+      env: TEST_SET=fastestTestSet
+    - name: "Typical Test Set 1 Magic"
+      env: TEST_SET=typicalTestSet1
+    - name: "Typical Test Set 2 Magic"
+      env: TEST_SET=typicalTestSet2
+    - name: "BM64 Magic"
+      env: TEST_SET=BM64
+    - name: "picorv32a Magic"
+      env: TEST_SET=picorv32a
+    - name: "chacha Magic"
+      env: TEST_SET=chacha
+    - name: "des Magic"
+      env: TEST_SET=des
+    - name: "md5 Magic"
+      env: TEST_SET=md5
+    - name: "PPU Magic"
+      env: TEST_SET=PPU
+    - name: "Slowest Test Set Magic"
+      env: TEST_SET=slowestTestSet
+    - name: "Base Test OpenROAD"
+      env: TEST_SET=spm
+    - name: "Fastest Test Set OpenROAD"
+      env: TEST_SET=fastestTestSet
+    - name: "Typical Test Set 1 OpenROAD"
+      env: TEST_SET=typicalTestSet1
+    - name: "Typical Test Set 2 OpenROAD"
+      env: TEST_SET=typicalTestSet2
+    - name: "BM64 OpenROAD"
+      env: TEST_SET=BM64
+    - name: "picorv32a OpenROAD"
+      env: TEST_SET=picorv32a
+    - name: "chacha OpenROAD"
+      env: TEST_SET=chacha
+    - name: "des OpenROAD"
+      env: TEST_SET=des
+    - name: "md5 OpenROAD"
+      env: TEST_SET=md5
+    - name: "PPU OpenROAD"
+      env: TEST_SET=PPU
+    - name: "Slowest Test Set OpenROAD"
+      env: TEST_SET=slowestTestSet
+
+before_install:
+  - sh if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
+      sh travisCI/travisPrebuild.sh magic;
+    else;
+      echo "Skipping pre-install";
+    fi
+
 install:
-  - if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
+  - sh if [ $TRAVIS_BRANCH == "develop_latest" && $TRAVIS_PULL_REQUEST == "false" ]; then
       sh travisCI/travisBuildLatest.sh;
     else;
       sh travisCI/travisBuild.sh;
