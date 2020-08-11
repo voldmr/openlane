@@ -77,9 +77,8 @@ jobs:
       env: TEST_SET=slowestTestSet TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
 
 before_install:
-  - sudo docker run -d --privileged -p 1234:1234 --name buildkit moby/buildkit:latest --addr tcp://0.0.0.0:1234
-  - sudo docker cp buildkit:/usr/bin/buildctl /usr/bin/
-  - export BUILDKIT_HOST=tcp://0.0.0.0:1234
+  - docker pull docker/dockerfile:experimental
+  - docker pull docker.io/library/node:erbium-alpine
   - sh ./travisCI/travisPrebuild.sh $TOOL
   
 install:
