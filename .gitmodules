@@ -1,0 +1,3 @@
+[submodule "docker_build/docker/magic/magic"]
+	path = docker_build/docker/magic/magic
+	url = git://opencircuitdesign.com/magic
