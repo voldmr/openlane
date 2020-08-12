@@ -29,6 +29,12 @@ services:
 os: 
   - linux
 
+dist: 
+  - bionic 
+  - xenial
+  - trusty 
+  - precise
+
 jobs:
   include:
     - name: "Base Test Magic"
