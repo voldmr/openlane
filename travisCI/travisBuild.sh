@@ -20,12 +20,12 @@ echo $RUN_ROOT
 cd  $PDK_ROOT
 rm -rf skywater-pdk
 git clone https://github.com/google/skywater-pdk.git skywater-pdk
-cd skywater-pdk
+cd $RUN_ROOT
 make skywater-library
 cd $PDK_ROOT
 rm -rf open_pdks
 git clone https://github.com/RTimothyEdwards/open_pdks.git open_pdks
-cd open_pdks
+cd $RUN_ROOT
 docker run -it -v $RUN_ROOT:/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc3  bash -c "make install-open_pdks"
 echo "done installing"
 cd $RUN_ROOT
