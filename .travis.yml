@@ -21,19 +21,13 @@ branches:
     - /^(?i:develop)-.*$/
 
 git:
-  submodule: false
+  submodules: false
 
 services:
     - docker
 
 os: 
   - linux
-
-dist: 
-  - bionic 
-  - xenial
-  - trusty 
-  - precise
 
 jobs:
   include:
@@ -83,8 +77,6 @@ jobs:
       env: TEST_SET=slowestTestSet TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
 
 before_install:
-  - docker pull docker/dockerfile:experimental
-  - docker pull docker.io/library/node:erbium-alpine
   - sh ./travisCI/travisPrebuild.sh $TOOL
   
 install:

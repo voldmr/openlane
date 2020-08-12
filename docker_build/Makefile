@@ -15,7 +15,7 @@ build-all: $(TOOL_BUILD_TARGETS)
 
 $(TOOL_BUILD_TARGETS): build-% : ./docker/%/Dockerfile
 	mkdir -p logs/docker
-	export DOCKER_BUILDKIT=1; ${ROOT} docker build $(DOCKER_BUILD_OPTS) -t $* docker/$* | tee logs/docker/$*.build.txt
+	${ROOT} docker build $(DOCKER_BUILD_OPTS) -t $* docker/$* | tee logs/docker/$*.build.txt
 
 # ==============================================================================
 # Export Tools
