@@ -77,7 +77,7 @@ jobs:
       env: TEST_SET=slowestTestSet TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
 
 before_install:
-  - sh ./travisCI/travisPrebuild.sh $TOOL
+  - sh ./travisCI/travisPrebuild.sh
   
 install:
   - sh travisCI/travisBuild.sh;
