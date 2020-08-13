@@ -21,7 +21,7 @@
     - [Flow configuration](#flow-configuration)
 - [Regression And Design Configurations Exploration](#regression-and-design-configurations-exploration)
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.com/efabless/openlane.svg?branch=develop-latest)](https://travis-ci.com/efabless/openlane)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.com/efabless/openlane.svg?branch=develop-latest_tools)](https://travis-ci.com/efabless/openlane)
 
 # Overview
 

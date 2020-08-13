@@ -19,7 +19,10 @@ export RUN_ROOT=$(pwd)
 echo $PDK_ROOT
 echo $RUN_ROOT
 git submodule update --init $RUN_ROOT/docker_build/docker/$TOOL/$REPO
+cd $RUN_ROOT/docker_build/docker/$TOOL/$REPO
 git checkout $BRANCH
+git pull
+cd $RUN_ROOT
 sh $RUN_ROOT/docker_build/docker/$TOOL/prep.sh $RUN_ROOT
 cd $RUN_ROOT/docker_build
 make build-$TOOL
