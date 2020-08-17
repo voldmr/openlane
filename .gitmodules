@@ -5,3 +5,6 @@
 	path = docker_build/docker/openroad_flow/OpenROAD
 	url = https://github.com/The-OpenROAD-Project/OpenROAD
 	branch = openroad
+[submodule "docker_build/docker/yosys/yosys"]
+	path = docker_build/docker/yosys/yosys
+	url = https://github.com/YosysHQ/yosys
