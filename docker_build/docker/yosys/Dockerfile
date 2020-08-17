@@ -60,15 +60,16 @@ RUN yum install -y wget autoconf && \
 # RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # git clone yosys
-RUN git clone https://github.com/YosysHQ/yosys yosys && \
-	cd yosys && \
-	git checkout 347dd01c2f7dff6e8222c5f9d360f84a17c937b5
+#RUN git clone https://github.com/YosysHQ/yosys yosys && \
+#	cd yosys && \
+#	git checkout 347dd01c2f7dff6e8222c5f9d360f84a17c937b5
 
 #RUN git clone https://github.com/antmicro/yosys yosys &&\
 	#cd yosys &&\
 	#git checkout fe58e937ef87fdb157dd89c365bb6a570fe616ea
 
 # build yosys
+COPY yosys yosys
 WORKDIR yosys
 
 
@@ -79,5 +80,5 @@ RUN make PREFIX=/build config-gcc \
 
 RUN mkdir -p /build/version
 RUN date +"Build Timestamp: %Y-%m-%d_%H-%M-%S" > /build/version/yosys.version
-RUN git rev-parse HEAD >> /build/version/yosys.version
+#RUN git rev-parse HEAD >> /build/version/yosys.version
 RUN tar -czf /build.tar.gz /build
