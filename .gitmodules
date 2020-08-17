@@ -8,3 +8,6 @@
 [submodule "docker_build/docker/yosys/yosys"]
 	path = docker_build/docker/yosys/yosys
 	url = https://github.com/YosysHQ/yosys
+[submodule "docker_build/docker/netgen/netgen"]
+	path = docker_build/docker/netgen/netgen
+	url = git://opencircuitdesign.com/netgen

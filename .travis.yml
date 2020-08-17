@@ -97,6 +97,28 @@ jobs:
       env: TEST_SET=PPU TOOL=yosys REPO=yosys BRANCH=master
     - name: "Slowest Test Set Yosys"
       env: TEST_SET=slowestTestSet TOOL=yosys REPO=yosys BRANCH=master
+    - name: "Base Test Netgen"
+      env: TEST_SET=spm TOOL=netgen REPO=netgen BRANCH=master
+    - name: "Fastest Test Set Netgen"
+      env: TEST_SET=fastestTestSet TOOL=netgen REPO=netgen BRANCH=master
+    - name: "Typical Test Set 1 Netgen"
+      env: TEST_SET=typicalTestSet1 TOOL=netgen REPO=netgen BRANCH=master
+    - name: "Typical Test Set 2 Netgen"
+      env: TEST_SET=typicalTestSet2 TOOL=netgen REPO=netgen BRANCH=master
+    - name: "BM64 Netgen"
+      env: TEST_SET=BM64 TOOL=netgen REPO=netgen BRANCH=master
+    - name: "picorv32a Netgen"
+      env: TEST_SET=picorv32a TOOL=netgen REPO=netgen BRANCH=master
+    - name: "chacha Netgen"
+      env: TEST_SET=chacha TOOL=netgen REPO=netgen BRANCH=master
+    - name: "des Netgen"
+      env: TEST_SET=des TOOL=netgen REPO=netgen BRANCH=master
+    - name: "md5 Netgen"
+      env: TEST_SET=md5 TOOL=netgen REPO=netgen BRANCH=master
+    - name: "PPU Netgen"
+      env: TEST_SET=PPU TOOL=netgen REPO=netgen BRANCH=master
+    - name: "Slowest Test Set Netgen"
+      env: TEST_SET=slowestTestSet TOOL=netgen REPO=netgen BRANCH=master
 
 before_install:
   - sh ./travisCI/travisPrebuild.sh
