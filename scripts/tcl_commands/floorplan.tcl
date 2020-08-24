@@ -15,6 +15,7 @@
 proc init_floorplan_or {args} {
         TIMER::timer_start
         set ::env(SAVE_DEF) $::env(verilog2def_tmp_file_tag)_openroad.def
+
         try_catch openroad -exit $::env(SCRIPTS_DIR)/openroad/or_floorplan.tcl |& tee $::env(TERMINAL_OUTPUT) $::env(verilog2def_log_file_tag).openroad.log
         TIMER::timer_stop
         exec echo "[TIMER::get_runtime]" >> $::env(verilog2def_log_file_tag)_openroad_runtime.txt
@@ -26,6 +27,23 @@ proc init_floorplan {args} {
 	TIMER::timer_start
 	set ::env(CURRENT_STAGE) floorplan
 	if {$::env(FP_SIZING) == "absolute"} {
+		if { [info exists ::env(CORE_AREA)] } {
+		  puts_warn "Ignoring CORE_AREA set; deriving it from *_MARGIN_MULT configurations"
+		}
+		set die_area $::env(DIE_AREA)
+		set ll_x [lindex $die_area 0]
+		set ll_y [lindex $die_area 1]
+		set ur_x [lindex $die_area 2]
+		set ur_y [lindex $die_area 3]
+
+		set ll_x [expr {$ll_x + $::env(LEFT_MARGIN_MULT) * $::env(PLACE_SITE_WIDTH)}]
+		set ll_y [expr {$ll_y + $::env(BOTTOM_MARGIN_MULT) * $::env(PLACE_SITE_HEIGHT)}]
+		set ur_x [expr {$ur_x - $::env(RIGHT_MARGIN_MULT) * $::env(PLACE_SITE_WIDTH)}]
+		set ur_y [expr {$ur_y - $::env(TOP_MARGIN_MULT) * $::env(PLACE_SITE_HEIGHT)}]
+
+		set ::env(CORE_AREA) [list $ll_x $ll_y $ur_x $ur_y]
+
+
 		try_catch verilog2def \
 			-verilog $::env(yosys_result_file_tag).v \
 			-lef $::env(MERGED_LEF) \
@@ -87,6 +105,7 @@ proc place_contextualized_io {args} {
 	  file copy -force $arg_values(-def) $::env(TMP_DIR)/top_level.def
 	  file copy -force $arg_values(-lef) $::env(TMP_DIR)/top_level.lef
 
+
 	  set prev_def $::env(CURRENT_DEF)
 
 	  try_catch python3 $::env(SCRIPTS_DIR)/contextualize.py \
@@ -103,6 +122,7 @@ proc place_contextualized_io {args} {
 
 	  set old_mode $::env(FP_IO_MODE)
 	  set ::env(FP_IO_MODE) 0; # set matching mode
+	  set ::env(CONTEXTUAL_IO_FLAG_) 1
 	  try_catch openroad -exit $::env(SCRIPTS_DIR)/openroad/or_ioplacer.tcl |& tee $::env(TERMINAL_OUTPUT) $::env(ioPlacer_log_file_tag).log
 	  set ::env(FP_IO_MODE) $old_mode
 
@@ -114,8 +134,8 @@ proc place_contextualized_io {args} {
 	  exec echo "[TIMER::get_runtime]" >> $::env(ioPlacer_log_file_tag)_runtime.txt
 
 	} else {
-	  puts_warn "IO placement: def/lef files don't exist, performing regular IO placement"
-	  place_io
+	  puts_err "Contextual IO placement: def/lef files don't exist, exiting"
+	  return -code error
 	}
 }
 
