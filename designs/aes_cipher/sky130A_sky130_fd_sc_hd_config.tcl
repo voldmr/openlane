@@ -1,7 +1,9 @@
 #Routing
 
-set ::env(FP_CORE_UTIL) 40
-set ::env(PL_TARGET_DENSITY) 0.30
+set ::env(FP_CORE_UTIL) 35
+
 
 # Extra
 
+
+set ::env(PL_TARGET_DENSITY) [ expr ($::env(FP_CORE_UTIL)-10) / 100.0 ] 
