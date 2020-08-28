@@ -57,8 +57,12 @@ if { !$::env(PL_ROUTABILITY_DRIVEN) } {
 }
 
 # set_replace_pad_right_cmd 1
-replace_initial_place_cmd
+if { ! $::env(PL_SKIP_INITIAL_PLACEMENT) || $::env(PL_INITIAL_PLACEMENT) } {
+    replace_initial_place_cmd
+}
+
 replace_nesterov_place_cmd
+
 replace_reset_cmd
 
 write_def $::env(SAVE_DEF)

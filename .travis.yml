@@ -47,8 +47,8 @@ jobs:
       env: TEST_SET=chacha TOOL=magic REPO=magic BRANCH=master
     - name: "des Magic"
       env: TEST_SET=des TOOL=magic REPO=magic BRANCH=master
-    - name: "md5 Magic"
-      env: TEST_SET=md5 TOOL=magic REPO=magic BRANCH=master
+    - name: "blabla Magic"
+      env: TEST_SET=blabla TOOL=magic REPO=magic BRANCH=master
     - name: "PPU Magic"
       env: TEST_SET=PPU TOOL=magic REPO=magic BRANCH=master
     - name: "aes_cipher Magic"
@@ -71,8 +71,8 @@ jobs:
       env: TEST_SET=chacha TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "des OpenROAD"
       env: TEST_SET=des TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
-    - name: "md5 OpenROAD"
-      env: TEST_SET=md5 TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
+    - name: "blabla OpenROAD"
+      env: TEST_SET=blabla TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "PPU OpenROAD"
       env: TEST_SET=PPU TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "aes_cipher OpenROAD"
@@ -95,8 +95,8 @@ jobs:
       env: TEST_SET=chacha TOOL=yosys REPO=yosys BRANCH=master
     - name: "des Yosys"
       env: TEST_SET=des TOOL=yosys REPO=yosys BRANCH=master
-    - name: "md5 Yosys"
-      env: TEST_SET=md5 TOOL=yosys REPO=yosys BRANCH=master
+    - name: "blabla Yosys"
+      env: TEST_SET=blabla TOOL=yosys REPO=yosys BRANCH=master
     - name: "PPU Yosys"
       env: TEST_SET=PPU TOOL=yosys REPO=yosys BRANCH=master
     - name: "aes_cipher Yosys"
@@ -119,8 +119,8 @@ jobs:
       env: TEST_SET=chacha TOOL=netgen REPO=netgen BRANCH=master
     - name: "des Netgen"
       env: TEST_SET=des TOOL=netgen REPO=netgen BRANCH=master
-    - name: "md5 Netgen"
-      env: TEST_SET=md5 TOOL=netgen REPO=netgen BRANCH=master
+    - name: "blabla Netgen"
+      env: TEST_SET=blabla TOOL=netgen REPO=netgen BRANCH=master
     - name: "PPU Netgen"
       env: TEST_SET=PPU TOOL=netgen REPO=netgen BRANCH=master
     - name: "aes_cipher Netgen"
