@@ -28,18 +28,8 @@ RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 60
 # magic dependencies
 RUN yum install -y csh wget tcl-devel tk-devel libX11-devel cairo-devel ncurses-devel
 
-<<<<<<< HEAD
 COPY magic magic
 WORKDIR magic
-=======
-# git clone magic components
-RUN git clone git://opencircuitdesign.com/magic magic_28082020
-
-WORKDIR magic_28082020
-
-RUN git checkout 0df5f6d0731024da457eeb42cb88725d93572920
-
->>>>>>> develop
 # build
 RUN ./configure --prefix=/build && \
     make -j4 && \

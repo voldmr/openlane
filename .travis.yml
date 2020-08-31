@@ -55,6 +55,8 @@ jobs:
       env: TEST_SET=aes_cipher TOOL=magic REPO=magic BRANCH=master
     - name: "y_huff Magic"
       env: TEST_SET=y_huff TOOL=magic REPO=magic BRANCH=master
+    - name: "ldpcenc Magic"
+      env: TEST_SET=ldpcenc TOOL=magic REPO=magic BRANCH=master
     - name: "Base Test OpenROAD"
       env: TEST_SET=spm TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Fastest Test Set OpenROAD"
@@ -79,6 +81,8 @@ jobs:
       env: TEST_SET=aes_cipher TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "y_huff OpenROAD"
       env: TEST_SET=y_huff TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
+    - name: "ldpcenc OpenROAD"
+      env: TEST_SET=ldpcenc TOOL=openroad_flow REPO=OpenROAD BRANCH=openroad
     - name: "Base Test Yosys"
       env: TEST_SET=spm TOOL=yosys REPO=yosys BRANCH=master
     - name: "Fastest Test Set Yosys"
@@ -103,6 +107,8 @@ jobs:
       env: TEST_SET=aes_cipher TOOL=yosys REPO=yosys BRANCH=master
     - name: "y_huff Yosys"
       env: TEST_SET=y_huff TOOL=yosys REPO=yosys BRANCH=master
+    - name: "ldpcenc Yosys"
+      env: TEST_SET=ldpcenc TOOL=yosys REPO=yosys BRANCH=master
     - name: "Base Test Netgen"
       env: TEST_SET=spm TOOL=netgen REPO=netgen BRANCH=master
     - name: "Fastest Test Set Netgen"
@@ -126,6 +132,8 @@ jobs:
     - name: "aes_cipher Netgen"
       env: TEST_SET=aes_cipher TOOL=netgen REPO=netgen BRANCH=master
     - name: "y_huff Netgen"
+      env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master
+    - name: "ldpcenc Netgen"
       env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master
 
 before_install:
