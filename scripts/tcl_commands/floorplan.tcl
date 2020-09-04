@@ -17,6 +17,31 @@ proc init_floorplan_or {args} {
         set ::env(SAVE_DEF) $::env(verilog2def_tmp_file_tag)_openroad.def
 
         try_catch openroad -exit $::env(SCRIPTS_DIR)/openroad/or_floorplan.tcl |& tee $::env(TERMINAL_OUTPUT) $::env(verilog2def_log_file_tag).openroad.log
+
+	set die_area_file [open $::env(verilog2def_report_file_tag).die_area.rpt]
+	  set ::env(CORE_AREA) [read $die_area_file]
+	close $die_area_file
+
+	puts $::env(CORE_AREA)
+
+	set core_width [expr {[lindex $::env(CORE_AREA) 2] - [lindex $::env(CORE_AREA) 0]}]
+	set core_height [expr {[lindex $::env(CORE_AREA) 3] - [lindex $::env(CORE_AREA) 1]}]
+
+	puts_info "Core area width: $core_width"
+	puts_info "Core area height: $core_height"
+
+	if { $core_width <= [expr {$::env(FP_PDN_VOFFSET) + $::env(FP_PDN_VPITCH)}] ||\
+	  $core_height <= [expr {$::env(FP_PDN_HOFFSET) + $::env(FP_PDN_HPITCH)}]} {
+	    puts_warn "Current core area is too small for a power grid"
+	    puts_warn "Minimizing the power grid!!!!"
+	    
+	    set ::env(FP_PDN_VOFFSET) [expr {$core_width/6.0}]
+	    set ::env(FP_PDN_HOFFSET) [expr {$core_height/6.0}]
+
+	    set ::env(FP_PDN_VPITCH) [expr {$core_width/3.0}]
+	    set ::env(FP_PDN_HPITCH) [expr {$core_height/3.0}]
+	  }
+
         TIMER::timer_stop
         exec echo "[TIMER::get_runtime]" >> $::env(verilog2def_log_file_tag)_openroad_runtime.txt
         set_def $::env(verilog2def_tmp_file_tag)_openroad.def
@@ -81,6 +106,54 @@ proc init_floorplan {args} {
 	TIMER::timer_stop
 	exec echo "[TIMER::get_runtime]" >> $::env(verilog2def_log_file_tag)_runtime.txt
 	set_def $::env(verilog2def_tmp_file_tag).def
+}
+
+proc place_io_ol {args} {
+	set options {\
+		{-lef optional}\
+		{-def optional}\
+		{-cfg optional}\
+		{-horizontal_layer optional}\
+		{-vertical_layer optional}\
+		{-horizontal_mult optional}\
+		{-vertical_layer optional}\
+		{-vertical_mult optional}\
+		{-length optional}\
+		{-output_def optional}\
+		{-extra_args optional}\
+	}
+	set flags {}
+	# set proc_name [info level 0]
+	parse_key_args "place_io_ol" args arg_values $options flags_map $flags
+
+	set_if_unset arg_values(-lef) $::env(MERGED_LEF)
+	set_if_unset arg_values(-def) $::env(CURRENT_DEF)
+
+	set_if_unset arg_values(-cfg) ""
+
+	set_if_unset arg_values(-horizontal_layer) $::env(FP_IO_HMETAL)
+	set_if_unset arg_values(-vertical_layer) $::env(FP_IO_VMETAL)
+
+	set_if_unset arg_values(-vertical_mult) $::env(FP_IO_VTHICKNESS_MULT)
+	set_if_unset arg_values(-horizontal_mult) $::env(FP_IO_HTHICKNESS_MULT)
+	set_if_unset arg_values(-length) [expr max($::env(FP_IO_VLENGTH), $::env(FP_IO_HLENGTH))]
+	set_if_unset arg_values(-output_def) $::env(ioPlacer_tmp_file_tag).def
+
+	set_if_unset arg_values(-extra_args) ""
+
+	try_catch python3 $::env(SCRIPTS_DIR)/io_place.py\
+		--input-lef $arg_values(-lef)\
+		--input-def $arg_values(-def)\
+		--config $arg_values(-cfg)\
+		--hor-layer $arg_values(-horizontal_layer)\
+		--ver-layer $arg_values(-vertical_layer)\
+		--ver-width-mult $arg_values(-vertical_mult)\
+		--hor-width-mult $arg_values(-horizontal_mult)\
+		--length-mult $arg_values(-length)\
+		-o $arg_values(-output_def)\
+		{*}$arg_values(-extra_args) |& tee $::env(LOG_DIR)/floorplan/place_io_ol.log $::env(TERMINAL_OUTPUT)
+
+	set_def $arg_values(-output_def)
 }
 
 proc place_io {args} {
@@ -191,7 +264,11 @@ proc run_floorplan {args} {
 	init_floorplan_or
 
 	# place io
-	place_io
+	if { [info exists ::env(FP_PIN_ORDER_CFG)] } {
+	  place_io_ol -cfg $::env(FP_PIN_ORDER_CFG)
+	} else {
+	  place_io
+	}
 
 #	# pdn generation
 #	gen_pdn

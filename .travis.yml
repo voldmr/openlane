@@ -17,11 +17,14 @@ language: minimal
 branches:
   only:
     - develop
-    - masterploy
+    - master
+    - staging
     - /^(?i:develop)-.*$/
+git:
+  depth: false
 
 services:
-    - docker
+  - docker
 
 os: 
   - linux
@@ -36,18 +39,18 @@ jobs:
       env: TEST_SET=typicalTestSet1
     - name: "Typical Test Set 2"
       env: TEST_SET=typicalTestSet2
+    - name: "aes_cipher"
+      env: TEST_SET=aes_cipher
+    - name: "des"
+      env: TEST_SET=des
     - name: "BM64"
       env: TEST_SET=BM64
     - name: "picorv32a"
       env: TEST_SET=picorv32a
     - name: "chacha"
       env: TEST_SET=chacha
-    - name: "des"
-      env: TEST_SET=des
     - name: "PPU"
       env: TEST_SET=PPU
-    - name: "aes_cipher"
-      env: TEST_SET=aes_cipher
     - name: "y_huff"
       env: TEST_SET=y_huff
     - name: "blabla"
@@ -60,16 +63,12 @@ jobs:
       env: TEST_SET=aes_core
     - name: "aes"
       env: TEST_SET=aes
-  allow_failures:
-    - name: "salsa20"
-      env: TEST_SET=salsa20
-    - name: "aes_core"
-      env: TEST_SET=aes_core
-    - name: "aes"
-      env: TEST_SET=aes      
+     
+before_install:
+  - sh travisCI/travisAutoMerge.sh
 
 install:
   - sh travisCI/travisBuild.sh
 
 script:
-  - bash travisCI/travisTest.sh $TEST_SET  
+  - bash travisCI/travisTest.sh $TEST_SET

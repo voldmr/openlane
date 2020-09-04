@@ -12,6 +12,7 @@
 - [Quick Start](#quick-start)
 - [Setting up the PDK: skywater-pdk](#setting-up-the-pdk-skywater-pdk)
 - [Setting up OpenLANE](#setting-up-openlane)
+    - [Building the OpenLANE Docker](#building-the-openlane-docker)
     - [Running OpenLANE](#running-openlane)
     - [Command line arguments](#command-line-arguments)
     - [Adding a design](#adding-a-design)
@@ -91,10 +92,11 @@ The following sections are to give you an understanding of what happens under th
         cd $PDK_ROOT
 	    git clone git@github.com:RTimothyEdwards/open_pdks.git
         cd open_pdks
-        git checkout e90095abe0b1e577b77c66d0179968fc6a553389
-        ./configure --with-sky130-source=$PDK_ROOT/skywater-pdk/libraries --with-local-path=$PDK_ROOT
-        make
-        make install-local
+        git checkout 52f78fa08f91503e0cff238979db4589e6187fdf
+        ./configure --with-sky130-source=$PDK_ROOT/skywater-pdk/libraries --with-sky130-local-path=$PDK_ROOT && \
+		cd sky130
+		make
+		make install-local
     ```
 
 **Note**: You can use different directories for sky130-source and local-path. However, in the instructions we are using $PDK_ROOT to facilitate the installation process
@@ -113,19 +115,44 @@ Refer to [this][24] for more details on the structure.
 
 # Setting up OpenLANE
 
+## Building the OpenLANE Docker
+
+### Building the Docker Image Locally
+
+To setup openlane you can build the docker container locally following these isntructions:
+
 ```bash
     git clone git@github.com:efabless/openlane --branch rc3
     cd openlane/docker_build
     make merge
     cd ..
 ```
+
+### Pulling an Auto-Built Docker Image from Dockerhub
+
+Alternatively, you can use the auto-built openlane docker images available through [dockerhub](https://hub.docker.com/r/efabless/openlane/tags)
+
+```bash
+    git clone git@github.com:efabless/openlane --branch rc3
+    docker pull efabless/openlane:rc3
+```
+
 ## Running OpenLANE
+
+### Running the Locally Built Docker Image
 
 Issue the following command to open the docker container from /path/to/openlane to ensure that the output files persist after exiting the container:
 
+```bash
+    docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc3
+```
+
+### Running the Pulled Auto-Built Docker Image
+If you pulled the docker image from dockerhub instead of building it locally, then run the following command:
 
 ```bash
-   docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc3
+    export IMAGE_NAME=efabless/openlane:rc3
+    docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) $IMAGE_NAME
 ```
 
 **Note: this will mount the openlane directory inside the container.**
