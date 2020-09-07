@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 git checkout develop
-git checkout staging
+git checkout develop-latest_pdk
 git merge develop --no-commit 
