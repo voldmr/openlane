@@ -24,7 +24,6 @@ if {[catch {read_def $::env(CURRENT_DEF)} errmsg]} {
 
 FastRoute::set_verbose 3
 
-FastRoute::set_output_file "$::env(fastroute_tmp_file_tag).guide"
 FastRoute::set_capacity_adjustment $::env(GLB_RT_ADJUSTMENT)
 
 # FastRoute::set_alpha 0.4
@@ -45,4 +44,4 @@ FastRoute::set_tile_size $::env(GLB_RT_TILES)
 
 FastRoute::start_fastroute
 FastRoute::run_fastroute
-FastRoute::write_guides
+FastRoute::write_guides "$::env(fastroute_tmp_file_tag).guide"
