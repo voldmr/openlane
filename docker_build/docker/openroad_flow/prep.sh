@@ -1,4 +1,8 @@
 OPENLANE_DIR=$1
+
+# temp route.tcl move step
+cp $OPENLANE_DIR/docker_build/docker/openroad_flow/or_route.tcl $OPENLANE_DIR/scripts/openroad/or_route.tcl
+
 cd $OPENLANE_DIR/docker_build/docker/openroad_flow/OpenROAD
 git submodule update --init --recursive
 cd ..
