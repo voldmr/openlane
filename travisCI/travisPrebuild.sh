@@ -23,7 +23,6 @@ cd $RUN_ROOT
 sh $RUN_ROOT/docker_build/docker/$TOOL/prep.sh $RUN_ROOT
 cd $RUN_ROOT/docker_build
 make build-$TOOL
-make export-$TOOL
 echo "done pre-build"
 cd $RUN_ROOT
 exit 0
