@@ -15,7 +15,7 @@ build-all: $(TOOL_BUILD_TARGETS) export-all
 
 $(TOOL_BUILD_TARGETS): build-% : ./docker/%/Dockerfile
 	mkdir -p logs/docker
-	export DOCKER_BUILDKIT=1; ${ROOT} docker build $(DOCKER_BUILD_OPTS) -t $* docker/$* | tee logs/docker/$*.build.txt
+	export ${ROOT} docker build $(DOCKER_BUILD_OPTS) -t $* docker/$* | tee logs/docker/$*.build.txt
 	rm -f tar/$*.tar.gz && echo "Deleted existing tar/$*.tar.gz"
 	mkdir -p tar
 	id=$$(${ROOT} docker create $*) ; \
