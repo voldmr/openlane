@@ -41,15 +41,20 @@ output_report_file = args.output_report
 design = args.design
 
 
+tolerance = {'general_tolerance':1, 'tritonRoute_violations':2, 'Magic_violations':10, 'antenna_violations':2}
+
 critical_statistics = ['tritonRoute_violations','Magic_violations', 'antenna_violations']
 
 
-def compare_vals(benchmark_value, regression_value):
+def compare_vals(benchmark_value, regression_value, param):
     if str(benchmark_value) == "-1":
         return True
     if str(regression_value) == "-1":
         return False
-    if float(benchmark_value) - float(regression_value) >= -1: # Allow for tolerance 1
+    tol = tolerance['general_tolerance']
+    if param in tolerance.keys():
+        tol = 0-tolerance[param]
+    if float(benchmark_value) - float(regression_value) >= tol: 
         return True
     else:
         return False
@@ -81,8 +86,10 @@ def parseCSV(csv_file):
     return design_out
     
 def criticalMistmatch(benchmark, regression_result):
+    if len(benchmark) == 0 or len(regression_result) == 0:
+        return False, "Nothing to compare with"
     for stat in critical_statistics:
-        if compare_vals(benchmark[stat],regression_result[stat]):
+        if compare_vals(benchmark[stat],regression_result[stat],stat):
             continue
         else:
             if str(regression_result[stat]) == "-1":
@@ -95,13 +102,13 @@ def criticalMistmatch(benchmark, regression_result):
 benchmark = parseCSV(benchmark_file)
 regression_result = parseCSV(regression_results_file)
 
-testFail, reasonForFailure = criticalMistmatch(benchmark,regression_result)
+testFail, reasonWhy = criticalMistmatch(benchmark,regression_result)
 
 report = str(design)
 if testFail:
-    report += ",FAILED,"+reasonForFailure+"\n"
+    report += ",FAILED,"+reasonWhy+"\n"
 else:
-    report += ",PASSED,\n"
+    report += ",PASSED,"+reasonWhy+"\n"
 
 
 outputReportOpener = open(output_report_file, 'a+')
