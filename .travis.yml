@@ -143,7 +143,7 @@ before_install:
   - sh ./travisCI/travisPrebuild.sh
   
 install:
-  - sh travisCI/travisBuild.sh;
+  - sh travisCI/travisBuild.sh
     
 script:
   - bash travisCI/travisTest.sh $TEST_SET
