@@ -26,6 +26,7 @@ set ::env(MAGIC_GENERATE_GDS) 1
 set ::env(MAGIC_GENERATE_LEF) 1
 set ::env(RUN_ROUTING_DETAILED) 1
 set ::env(RUN_SIMPLE_CTS) 0
+set ::env(CLOCK_PERIOD) "10"
 
 set ::env(USE_ARC_ANTENNA_CHECK) 1
 
@@ -39,6 +40,8 @@ set ::env(SPEF_WIRE_MODEL) "L"
 set ::env(SPEF_EDGE_CAP_FACTOR) 1
 set ::env(MPLCONFIGDIR) /tmp
 
+set ::env(WIRE_RC_LAYER) "met1"; # Used for estimate_parasitics
+set ::env(GENERATE_FINAL_SUMMARY_REPORT) 1
 # 0: no diodes
 # 1: spray inputs with diodes
 # 2: spray inputs with fake diodes first then fix up the violators with real ones
