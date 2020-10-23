@@ -1,10 +1,10 @@
 [submodule "docker_build/docker/magic/magic"]
 	path = docker_build/docker/magic/magic
 	url = git://opencircuitdesign.com/magic
-[submodule "docker_build/docker/openroad_flow/OpenROAD"]
-	path = docker_build/docker/openroad_flow/OpenROAD
+[submodule "docker_build/docker/openroad_app/OpenROAD"]
+	path = docker_build/docker/openroad_app/OpenROAD
 	url = https://github.com/The-OpenROAD-Project/OpenROAD
-	branch = openroad
+	branch = master
 [submodule "docker_build/docker/yosys/yosys"]
 	path = docker_build/docker/yosys/yosys
 	url = https://github.com/YosysHQ/yosys
