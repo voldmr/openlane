@@ -1,10 +1,10 @@
 #DOCKER_BUILD_OPTS ?= --rm --no-cache
 DOCKER_BUILD_OPTS ?= --rm 
 DOCKERFILE_PATH ?= ./Dockerfile
-IMAGE_NAME ?= openlane:rc4
+IMAGE_NAME ?= openlane:rc5
 #ROOT = sudo
 
-TOOLS = replace opendp route_14 opensta yosys antmicro_yosys magic addspacers openroad_app padring netgen vlogtoverilog openphysyn
+TOOLS = replace opendp route opensta yosys antmicro_yosys magic openroad_app padring netgen vlogtoverilog openphysyn
 
 TOOL_BUILD_TARGETS = $(foreach tool,$(TOOLS),build-$(tool))
 TOOL_EXPORT_TARGETS_PHONY = $(foreach tool,$(TOOLS),export-$(tool))

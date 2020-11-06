@@ -66,11 +66,11 @@ To run the regression test, which tests the flow against all available designs u
 
 Your results will be compared with: [sky130_fd_sc_hd](https://github.com/efabless/openlane/blob/master/regression_results/benchmark_results/SW_HD.csv).
 
-After running you'll find a directory added under [./regression_results/](./regression_results) it will contain all the reports needed for you to know whether you've been successful or not. Check [this](./regression_results/README.md#output) for more details. 
+After running you'll find a directory added under [./regression_results/](./regression_results) it will contain all the reports needed for you to know whether you've been successful or not. Check [this](./regression_results/README.md#output) for more details.
 
 **Note**: if runtime is `-1`, that means the design failed. Any reported statistics from any run after the failure of the design is reported as `-1` as well.
 
-The following sections are to give you an understanding of what happens under the hood in the Makefile.
+**DISCLAIMER: The following sections are to give you an understanding of what happens under the hood in the Makefile.**
 
 # Setting up the PDK: skywater-pdk
 
@@ -131,7 +131,7 @@ Refer to [this][24] for more details on the structure.
 To setup openlane you can build the docker container locally following these instructions:
 
 ```bash
-    git clone git@github.com:efabless/openlane --branch rc4
+    git clone git@github.com:efabless/openlane --branch rc5
     cd openlane/docker_build
     make merge
     cd ..
@@ -139,11 +139,13 @@ To setup openlane you can build the docker container locally following these ins
 
 ### Pulling an Auto-Built Docker Image from Dockerhub
 
-Alternatively, you can use the auto-built openlane docker images available through [dockerhub](https://hub.docker.com/r/efabless/openlane/tags)
+Alternatively, you can use the auto-built openlane docker images available through [dockerhub](https://hub.docker.com/r/efabless/openlane/tags).
+
+**Note:** Make sure you have an account on dockerhub to execute the following step.
 
 ```bash
-    git clone git@github.com:efabless/openlane --branch rc4
-    docker pull efabless/openlane:rc4
+    git clone git@github.com:efabless/openlane --branch rc5
+    docker pull efabless/openlane:rc5
 ```
 
 ## Running OpenLANE
@@ -153,14 +155,14 @@ Alternatively, you can use the auto-built openlane docker images available throu
 Issue the following command to open the docker container from /path/to/openlane to ensure that the output files persist after exiting the container:
 
 ```bash
-    docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc4
+    docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc5
 ```
 
 ### Running the Pulled Auto-Built Docker Image
 If you pulled the docker image from dockerhub instead of building it locally, then run the following command:
 
 ```bash
-    export IMAGE_NAME=efabless/openlane:rc4
+    export IMAGE_NAME=efabless/openlane:rc5
     docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) $IMAGE_NAME
 ```
 
