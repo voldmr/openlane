@@ -1,0 +1,34 @@
+diff --git a/include/opendb/lefout.h b/include/opendb/lefout.h
+index 426981a..f0ee9b0 100644
+--- a/include/opendb/lefout.h
++++ b/include/opendb/lefout.h
+@@ -33,6 +33,7 @@
+ #pragma once
+ 
+ #include <unordered_map>
++#include <string>
+ 
+ #include "dbObject.h"
+ #include "odb.h"
+diff --git a/src/defout/defout_impl.cpp b/src/defout/defout_impl.cpp
+index 08c9729..ce82a4c 100644
+--- a/src/defout/defout_impl.cpp
++++ b/src/defout/defout_impl.cpp
+@@ -918,14 +918,14 @@ void defout_impl::writeBPin(dbBPin* bpin, int cnt)
+       fprintf(_out, "    - %s + NET N%u", bname.c_str(), net->getId());
+     else
+       fprintf(
+-          _out, "    - %s.extra%d + NET N%u", bname.c_str(), cnt, net->getId());
++          _out, "    - %s + NET N%u", bname.c_str(), net->getId());
+   } else {
+     std::string nname = net->getName();
+     if (cnt == 0)
+       fprintf(_out, "    - %s + NET %s", bname.c_str(), nname.c_str());
+     else
+       fprintf(
+-          _out, "    - %s.extra%d + NET %s", bname.c_str(), cnt, nname.c_str());
++          _out, "    - %s + NET %s", bname.c_str(), nname.c_str());
+   }
+ 
+   if (bterm->isSpecial())
+

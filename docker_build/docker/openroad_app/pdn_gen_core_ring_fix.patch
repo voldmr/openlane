@@ -1,38 +1,73 @@
+diff --git a/src/OpenDB b/src/OpenDB
+--- a/src/OpenDB
++++ b/src/OpenDB
+@@ -1 +1 @@
+-Subproject commit 548af54ca3fa0523921592022ccc6b86b2ebdb29
++Subproject commit 548af54ca3fa0523921592022ccc6b86b2ebdb29-dirty
 diff --git a/src/pdngen/src/PdnGen.tcl b/src/pdngen/src/PdnGen.tcl
-index 2e0d0f26..b2614689 100644
+index 6412b850..dc2ec33e 100644
 --- a/src/pdngen/src/PdnGen.tcl
 +++ b/src/pdngen/src/PdnGen.tcl
-@@ -1811,6 +1811,33 @@ proc generate_via_stacks {l1 l2 tag constraints} {
-   variable grid_data
+@@ -2740,10 +2740,7 @@ proc export_opendb_power_pin {net_name signal_type} {
+   variable tech
    
-   set area [dict get $grid_data area]
+   set net [$block findNet $net_name]
+-  set bterm [odb::dbBTerm_create $net "${net_name}"]
+-
+-  set bpin [odb::dbBPin_create $bterm]
+-  $bpin setPlacementStatus "FIRM"
++	set bterm [odb::dbBTerm_create $net "${net_name}"]
+ 
+   foreach lay [lreverse $metal_layers] {
+     if {[array names stripe_locs "$lay,$signal_type"] == ""} {continue}
+@@ -2759,11 +2756,14 @@ proc export_opendb_power_pin {net_name signal_type} {
+       set yMax [expr max([[lindex $points 0] getY], [[lindex $points 1] getY], [[lindex $points 2] getY], [[lindex $points 3] getY])]
+ 
+       set layer [$tech findLayer $lay]
 +
-+  # account for the core rings in the area used to detect intersections
-+  # debug "Original area: $area"
-+  if {[dict exists $grid_data core_ring] && [dict exists $grid_data core_ring $l1]} {
-+    set area_l1 [adjust_area_for_core_rings $l1 $area]
-+
-+    set xMin [expr min([lindex $area_l1 0], [lindex $area 0])]
-+    set yMin [expr min([lindex $area_l1 1], [lindex $area 1])]
-+
-+    set xMax [expr max([lindex $area_l1 2], [lindex $area 2])]
-+    set yMax [expr max([lindex $area_l1 3], [lindex $area 3])]
-+
-+    set area [list $xMin $yMin $xMax $yMax]
-+  }
-+
-+  if {[dict exists $grid_data core_ring] && [dict exists $grid_data core_ring $l2]} {
-+    set area_l2 [adjust_area_for_core_rings $l2 $area]
-+
-+    set xMin [expr min([lindex $area_l2 0], [lindex $area 0])]
-+    set yMin [expr min([lindex $area_l2 1], [lindex $area 1])]
-+
-+    set xMax [expr max([lindex $area_l2 2], [lindex $area 2])]
-+    set yMax [expr max([lindex $area_l2 3], [lindex $area 3])]
-+
-+    set area [list $xMin $yMin $xMax $yMax]
-+  }
-+  # debug "Modifed area: $area"
++	  set bpin [odb::dbBPin_create $bterm]
++	  $bpin setPlacementStatus "FIRM"
+       odb::dbBox_create $bpin $layer $xMin $yMin $xMax $yMax
+     }
+     # debug "created $count pins on $net_name (layer:$lay)"
+     # Only promote metal on top layers to be pins
+-    break
++    # break
+   }
+ }
+ 
+@@ -2845,14 +2845,14 @@ proc get {args} {
+ proc get_macro_power_pins {inst_name} {
+   set specification [select_instance_specification $inst_name]
+   if {[dict exists $specification power_pins]} {
+-    return [dict get $specification power_pins]
++    return [subst [dict get $specification power_pins]]
+   }
+   return "VDDPE VDDCE"
+ }
+ proc get_macro_ground_pins {inst_name} {
+   set specification [select_instance_specification $inst_name]
+   if {[dict exists $specification ground_pins]} {
+-    return [dict get $specification ground_pins]
++    return [subst [dict get $specification ground_pins]]
+   }
+   return "VSSE"
+ }
+@@ -3959,7 +3959,7 @@ proc get_macro_blockage_layers {instance} {
    
-   #this variable contains locations of intersecting points of two orthogonal metal layers, between which via needs to be inserted
-   #for every intersection. Here l1 and l2 are layer names, and i1 and i2 and their indices, tag represents domain (power or ground)   
+   set specification [select_instance_specification $instance]
+   if {[dict exists $specification blockages]} {
+-    return [dict get $specification blockages]
++    return [subst [dict get $specification blockages]]
+   }
+   return $metal_layers
+ }
+@@ -4587,7 +4587,7 @@ proc opendb_update_grid {} {
+   information 15 "Writing to database"
+   export_opendb_vias
+   export_opendb_specialnets
+-  # export_opendb_power_pins
++  export_opendb_power_pins
+ }
+   
+ proc apply_pdn {config is_verbose} {
