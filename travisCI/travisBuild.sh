@@ -23,12 +23,21 @@ echo $PDK_ROOT
 echo $RUN_ROOT
 make openlane
 cd  $PDK_ROOT
+
+rm -rf skywater-pdk
+git clone https://github.com/google/skywater-pdk.git skywater-pdk
+cd $PDK_ROOT/skywater-pdk
+git submodule update --init libraries/$STD_CELL_LIBRARY/latest
+git submodule update --init libraries/$IO_LIBRARY/latest
+git submodule update --init libraries/$SPECIAL_VOLTAGE_LIBRARY/latest
 cnt=0
-until rm -rf skywater-pdk; do
+until make -j$(nproc) timing; do
 	cnt=$((cnt+1))
 	if [ $cnt -eq 5 ]; then
 		exit 2
 	fi
+	cd  $PDK_ROOT
+	rm -rf skywater-pdk
 	git clone https://github.com/google/skywater-pdk.git skywater-pdk
 	cd $PDK_ROOT/skywater-pdk
 	git submodule update --init libraries/$STD_CELL_LIBRARY/latest
