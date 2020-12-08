@@ -30,7 +30,7 @@ until rm -rf skywater-pdk; do
 		exit 2
 	fi
 	git clone https://github.com/google/skywater-pdk.git skywater-pdk
-	cd skywater-pdk
+	cd $PDK_ROOT/skywater-pdk
 	git submodule update --init libraries/$STD_CELL_LIBRARY/latest
 	git submodule update --init libraries/$IO_LIBRARY/latest
 	git submodule update --init libraries/$SPECIAL_VOLTAGE_LIBRARY/latest
