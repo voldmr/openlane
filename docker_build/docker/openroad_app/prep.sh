@@ -5,11 +5,13 @@ git submodule update --init --recursive
 cd ..
 cp rails.patch OpenROAD/
 cp pdn_export_pin.patch OpenROAD/
+cp pdngen_export_subst.patch OpenROAD/
 cp setup_local.patch OpenROAD/src/OpenDB/src/swig/python
 
 cd OpenROAD
 git apply rails.patch
 git apply pdn_export_pin.patch
+git apply pdngen_export_subst.patch
 cd src/OpenDB/src/swig/python 
 git apply setup_local.patch
 

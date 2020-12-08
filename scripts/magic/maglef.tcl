@@ -1,4 +1,3 @@
-#!/bin/sh
 # Copyright 2020 Efabless Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+drc off
 
-cell_name=$1
-lef_file=$2
-input=$3
-output=$4
+lef read $::env(magic_result_file_tag).lef
 
-addspacers \
-		   -o ${output}_broken \
-		   -l $lef_file \
-		   -f $cell_name $input \
-		   -v
+load $::env(DESIGN_NAME)
 
-cp $input $output
-sh $SCRIPTS_DIR/mv_components.sh ${output}_broken $output &&
-	rm ${output}_broken
+cellname rename $::env(DESIGN_NAME) $::env(DESIGN_NAME).lef
+
+cellname filepath $::env(DESIGN_NAME).lef $::env(RESULTS_DIR)/magic
+save
+
+puts "\[INFO\]: DONE GENERATING MAGLEF VIEW"
+exit 0

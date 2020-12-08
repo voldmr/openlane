@@ -73,8 +73,16 @@ parser.add_argument('--ver-width-mult', '-vwm',
                     default=2,
                     help='')
 
-parser.add_argument('--length-mult', '-lm',
+parser.add_argument('--length', '-len', type=float,
                     default=2,
+                    help='')
+
+parser.add_argument('--hor-extension', '-hext', type=float,
+                    default=0.0,
+                    help='')
+
+parser.add_argument('--ver-extension', '-vext', type=float,
+                    default=0.0,
                     help='')
 
 parser.add_argument('--reverse', '-rev',
@@ -83,6 +91,11 @@ parser.add_argument('--reverse', '-rev',
                     required=False,
                     default=[],
                     help='')
+
+parser.add_argument('--bus-sort', '-bsort', action='store_true',
+                    default=False,
+                    help='Sort pins so that bus bits with the same index are grouped'
+                    'together. e.g., a[0] b[0] c[0] a[1] b[1] c[1]')
 # TODO
 # width, length, and extension multipliers
 
@@ -92,6 +105,7 @@ def_file_name = args.input_def
 lef_file_name = args.input_lef
 output_def_file_name = args.output_def
 config_file_name = args.config
+bus_sort_flag = args.bus_sort
 
 h_layer_index = int(args.hor_layer)
 v_layer_index = int(args.ver_layer)
@@ -99,7 +113,16 @@ v_layer_index = int(args.ver_layer)
 h_width_mult = int(args.hor_width_mult)
 v_width_mult = int(args.ver_width_mult)
 
-length_mult = int(args.length_mult)
+LENGTH = int(1000*args.length)
+
+H_EXTENSION = int(1000*args.hor_extension)
+V_EXTENSION = int(1000*args.ver_extension)
+
+if H_EXTENSION < 0:
+    H_EXTENSION = 0
+
+if V_EXTENSION < 0:
+    V_EXTENSION = 0
 
 reverse_arr = args.reverse
 reverse_arr = ["#"+rev for rev in reverse_arr]
@@ -134,14 +157,22 @@ def atof(text):
 
 def natural_keys(enum):
     text = enum[0]
+    text = re.sub("(\[|\]|\.|\$)", "", text)
     '''
     alist.sort(key=natural_keys) sorts in human order
     http://nedbatchelder.com/blog/200712/human_sorting.html
-    (See Toothy's implementation in the comments)
+    (see toothy's implementation in the comments)
     float regex comes from https://stackoverflow.com/a/12643073/190597
     '''
     return [atof(c) for c in re.split(r'[+-]?([0-9]+(?:[.][0-9]*)?|[.][0-9]+)', text)]
 
+def bus_keys(enum):
+    text = enum[0]
+    m = re.match("^.*\[(\d+)\]$", text)
+    if not m:
+        return -1
+    else:
+        return int(m.group(1))
 
 # read config
 
@@ -162,17 +193,18 @@ if config_file_name is not None and config_file_name != "":
 
             if cur_side is not None and token[0] != "#":
                 pin_placement_cfg[cur_side].append(token)
-            elif token not in ["#N", "#E", "#S", "#W", "#NR", "#ER", "#SR", "#WR"]:
-                print("Valid sides are #N, #E, #S, or #W. Append R for reversing the default order.",
+            elif token not in ["#N", "#E", "#S", "#W", "#NR", "#ER", "#SR", "#WR", "#BUS_SORT"]:
+                print("Valid directives are #N, #E, #S, or #W. Append R for reversing the default order.",
+                      "Use #BUS_SORT to group 'bus bits' by index.",
                       "Please make sure you have set a valid side first before listing pins")
                 sys.exit(1)
+            elif token == "#BUS_SORT":
+                bus_sort_flag = True
             else:
                 if len(token) == 3:
                     token = token[0:2]
                     reverse_arr.append(token)
                 cur_side = token
-
-print(pin_placement_cfg)
 
 # build a list of pins
 
@@ -191,8 +223,6 @@ V_LAYER = tech.findRoutingLayer(v_layer_index)
 H_WIDTH = h_width_mult * H_LAYER.getWidth()
 V_WIDTH = v_width_mult * V_LAYER.getWidth()
 
-LENGTH = length_mult*max(V_WIDTH, H_WIDTH)
-
 print("Top-level design name:", top_design_name)
 
 bterms = block_top.getBTerms()
@@ -203,6 +233,8 @@ for bterm in bterms:
 
 # sort them "humanly"
 bterms_enum.sort(key=natural_keys)
+if bus_sort_flag:
+    bterms_enum.sort(key=bus_keys)
 bterms = [bterm[1] for bterm in bterms_enum]
 
 pin_placement = {"#N": [], "#E": [], "#S": [], "#W": []}
@@ -294,19 +326,19 @@ for side in pin_placement:
         pin_bpin.setPlacementStatus("PLACED")
 
         if side in ["#N", "#S"]:
-            rect = odb.Rect(0, 0, V_WIDTH, LENGTH)
+            rect = odb.Rect(0, 0, V_WIDTH, LENGTH+V_EXTENSION)
             if side == "#N":
                 y = BLOCK_UR_Y-LENGTH
             else:
-                y = BLOCK_LL_Y
+                y = BLOCK_LL_Y-V_EXTENSION
             rect.moveTo(slot-V_WIDTH//2, y)
             odb.dbBox_create(pin_bpin, V_LAYER, *rect.ll(), *rect.ur())
         else:
-            rect = odb.Rect(0, 0, LENGTH, H_WIDTH)
+            rect = odb.Rect(0, 0, LENGTH+H_EXTENSION, H_WIDTH)
             if side == "#E":
                 x = BLOCK_UR_X-LENGTH
             else:
-                x = BLOCK_LL_X
+                x = BLOCK_LL_X-H_EXTENSION
             rect.moveTo(x, slot-H_WIDTH//2)
             odb.dbBox_create(pin_bpin, H_LAYER, *rect.ll(), *rect.ur())
 

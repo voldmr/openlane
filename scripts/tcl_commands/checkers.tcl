@@ -48,8 +48,19 @@ proc check_floorplan_missing_lef {args} {
         }
         puts_err "Check whether EXTRA_LEFS is set appropriately"
         return -code error
-    } else {
-        puts_info "Floorplanning was successful"
+    }
+}
+
+proc check_floorplan_missing_pins {args} {
+    set checker [catch {exec grep -E -o "instance \[^\[:space:]]+ port \[^\[:space:]]+ not found" $::env(verilog2def_log_file_tag).openroad.log} mismatches]
+
+    if { ! $checker } {
+        set lines [split $mismatches "\n"]
+        foreach line $lines {
+            puts_err "$line in $::env(MERGED_LEF)"
+        }
+        puts_err "Check whether EXTRA_LEFS is set appropriately and if they have the referenced pins."
+        return -code error
     }
 }
 
@@ -75,6 +86,18 @@ proc check_replace_divergence {args} {
         return -code error
     } else {
         puts_info "Global placement was successful"
+    }
+}
+
+proc check_macro_placer_num_solns {args} {
+    set checker [catch {exec grep -E -o "NumFinalSols = 0" $::env(LOG_DIR)/placement/basic_mp.log} error]
+
+    if { ! $checker } {
+        puts_err "Macro placement failed"
+        puts_err "$error; you may need to adjust the HALO"
+        return -code error
+    } else {
+        puts_info "Macro placement was successful"
     }
 }
 

@@ -29,115 +29,115 @@ git:
 services:
   - docker
 
-os: 
+os:
   - linux
 
 jobs:
   include:
     - name: "Base Test Magic"
-      env: TEST_SET=spm TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=spm TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "Fastest Test Set Magic"
-      env: TEST_SET=fastestTestSet TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=fastestTestSet TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 1 Magic"
-      env: TEST_SET=typicalTestSet1 TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=typicalTestSet1 TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 2 Magic"
-      env: TEST_SET=typicalTestSet2 TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=typicalTestSet2 TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "BM64 Magic"
-      env: TEST_SET=BM64 TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=BM64 TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "picorv32a Magic"
-      env: TEST_SET=picorv32a TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=picorv32a TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "chacha Magic"
-      env: TEST_SET=chacha TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=chacha TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "des Magic"
-      env: TEST_SET=des TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=des TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "blabla Magic"
-      env: TEST_SET=blabla TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=blabla TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "PPU Magic"
-      env: TEST_SET=PPU TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=PPU TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "aes_cipher Magic"
-      env: TEST_SET=aes_cipher TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=aes_cipher TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "y_huff Magic"
-      env: TEST_SET=y_huff TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=y_huff TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "ldpcenc Magic"
-      env: TEST_SET=ldpcenc TOOL=magic REPO=magic BRANCH=master
+      env: TEST_SET=ldpcenc TOOL=magic REPO=magic BRANCH=master EXTRA_FLAGS=-so
     - name: "Base Test OpenROAD"
-      env: TEST_SET=spm TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=spm TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "Fastest Test Set OpenROAD"
-      env: TEST_SET=fastestTestSet TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=fastestTestSet TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 1 OpenROAD"
-      env: TEST_SET=typicalTestSet1 TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=typicalTestSet1 TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 2 OpenROAD"
-      env: TEST_SET=typicalTestSet2 TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=typicalTestSet2 TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "BM64 OpenROAD"
-      env: TEST_SET=BM64 TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=BM64 TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "picorv32a OpenROAD"
-      env: TEST_SET=picorv32a TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=picorv32a TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "chacha OpenROAD"
-      env: TEST_SET=chacha TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=chacha TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "des OpenROAD"
-      env: TEST_SET=des TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=des TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "blabla OpenROAD"
-      env: TEST_SET=blabla TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=blabla TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "PPU OpenROAD"
-      env: TEST_SET=PPU TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=PPU TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "aes_cipher OpenROAD"
-      env: TEST_SET=aes_cipher TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=aes_cipher TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "y_huff OpenROAD"
-      env: TEST_SET=y_huff TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=y_huff TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "ldpcenc OpenROAD"
-      env: TEST_SET=ldpcenc TOOL=openroad_app REPO=OpenROAD BRANCH=master
+      env: TEST_SET=ldpcenc TOOL=openroad_app REPO=OpenROAD BRANCH=master EXTRA_FLAGS=-so
     - name: "Base Test Yosys"
-      env: TEST_SET=spm TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=spm TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "Fastest Test Set Yosys"
-      env: TEST_SET=fastestTestSet TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=fastestTestSet TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 1 Yosys"
-      env: TEST_SET=typicalTestSet1 TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=typicalTestSet1 TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 2 Yosys"
-      env: TEST_SET=typicalTestSet2 TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=typicalTestSet2 TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "BM64 Yosys"
-      env: TEST_SET=BM64 TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=BM64 TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "picorv32a Yosys"
-      env: TEST_SET=picorv32a TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=picorv32a TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "chacha Yosys"
-      env: TEST_SET=chacha TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=chacha TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "des Yosys"
-      env: TEST_SET=des TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=des TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "blabla Yosys"
-      env: TEST_SET=blabla TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=blabla TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "PPU Yosys"
-      env: TEST_SET=PPU TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=PPU TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "aes_cipher Yosys"
-      env: TEST_SET=aes_cipher TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=aes_cipher TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "y_huff Yosys"
-      env: TEST_SET=y_huff TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=y_huff TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "ldpcenc Yosys"
-      env: TEST_SET=ldpcenc TOOL=yosys REPO=yosys BRANCH=master
+      env: TEST_SET=ldpcenc TOOL=yosys REPO=yosys BRANCH=master EXTRA_FLAGS=-so
     - name: "Base Test Netgen"
-      env: TEST_SET=spm TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=spm TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "Fastest Test Set Netgen"
-      env: TEST_SET=fastestTestSet TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=fastestTestSet TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 1 Netgen"
-      env: TEST_SET=typicalTestSet1 TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=typicalTestSet1 TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "Typical Test Set 2 Netgen"
-      env: TEST_SET=typicalTestSet2 TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=typicalTestSet2 TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "BM64 Netgen"
-      env: TEST_SET=BM64 TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=BM64 TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "picorv32a Netgen"
-      env: TEST_SET=picorv32a TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=picorv32a TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "chacha Netgen"
-      env: TEST_SET=chacha TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=chacha TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "des Netgen"
-      env: TEST_SET=des TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=des TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "blabla Netgen"
-      env: TEST_SET=blabla TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=blabla TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "PPU Netgen"
-      env: TEST_SET=PPU TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=PPU TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "aes_cipher Netgen"
-      env: TEST_SET=aes_cipher TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=aes_cipher TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "y_huff Netgen"
-      env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
     - name: "ldpcenc Netgen"
-      env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master
+      env: TEST_SET=y_huff TOOL=netgen REPO=netgen BRANCH=master EXTRA_FLAGS=-so
 
 before_install:
   - sh ./travisCI/travisPrebuild.sh
@@ -146,4 +146,4 @@ install:
   - sh travisCI/travisBuild.sh
     
 script:
-  - bash travisCI/travisTest.sh $TEST_SET
+  - bash travisCI/travisTest.sh
