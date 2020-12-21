@@ -15,7 +15,7 @@
 mkdir pdks
 export PDK_ROOT=$(pwd)/pdks
 export RUN_ROOT=$(pwd)
-export IMAGE_NAME=openlane:rc6
+export IMAGE_NAME=openlane:rc7
 export STD_CELL_LIBRARY=sky130_fd_sc_hd
 export SPECIAL_VOLTAGE_LIBRARY=sky130_fd_sc_hvl
 export IO_LIBRARY=sky130_fd_io
