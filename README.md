@@ -27,6 +27,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.com/efabless/openlane.svg?branch=develop)](https://travis-ci.com/efabless/openlane) [![Documentation Status](https://readthedocs.org/projects/openlane/badge/?version=develop-applied_sphinx)](https://openlane.readthedocs.io/en/develop-applied_sphinx/?badge=develop-applied_sphinx)
 
+This documentation is also available at ReadTheDocs [here](https://openlane.readthedocs.io/en/develop-applied_sphinx/).
+
 # Overview
 
 OpenLANE is an automated RTL to GDSII flow based on several components including OpenROAD, Yosys, Magic, Netgen, Fault, OpenPhySyn, CVC, SPEF-Extractor and custom methodology scripts for design exploration and optimization. The flow performs full ASIC implementation steps from RTL all the way down to GDSII - this capability will be released in the coming weeks with completed SoC design examples that have been sent to SkyWater for fabrication.
