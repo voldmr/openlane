@@ -14,7 +14,6 @@
 
 # Routing defaults
 set ::env(ROUTING_CORES) 4
-set ::env(GLB_RT_OLD_FR) 0
 set ::env(GLB_RT_ADJUSTMENT) 0
 set ::env(GLB_RT_L1_ADJUSTMENT) 0; # more like pdk-specific (e.g., when L1 = li)
 set ::env(GLB_RT_L2_ADJUSTMENT) 0
@@ -34,3 +33,5 @@ set ::env(DIODE_PADDING) 2 ; # sites
 # It is capable to detect any divergence, so, you'll probably end up with the lowest # of Antenna violations possible.
 # Check the configuration/README.md for more.
 set ::env(GLB_RT_MAX_DIODE_INS_ITERS) 1
+
+set ::env(ROUTING_OPT_ITERS) 64

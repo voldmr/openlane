@@ -48,6 +48,7 @@ proc write_powered_verilog {args} {
       {-lef optional}
       {-power optional}
       {-ground optional}
+      {-powered_netlist optional}
     }
     set flags {}
     parse_key_args "write_powered_verilog" args arg_values $options flags_map $flags
@@ -59,11 +60,18 @@ proc write_powered_verilog {args} {
     set_if_unset arg_values(-lef) $::env(MERGED_LEF)
 
 
+    if { [info exists ::env(SYNTH_USE_PG_PINS_DEFINES)] } {
+        set_if_unset arg_values(-powered_netlist) $::env(yosys_tmp_file_tag).pg_define.v
+    } else {
+        set_if_unset arg_values(-powered_netlist) ""
+    }
+
     try_catch python3 $::env(SCRIPTS_DIR)/write_powered_def.py \
       -d $arg_values(-def) \
       -l $arg_values(-lef) \
-      -v $arg_values(-power) \
-      -g $arg_values(-ground) \
+      --power-port $arg_values(-power) \
+      --ground-port $arg_values(-ground) \
+      --powered-netlist $arg_values(-powered_netlist) \
       -o $arg_values(-output_def) \
       |& tee $::env(TERMINAL_OUTPUT) $::env(LOG_DIR)/lvs/write_powered_verilog.log
 
@@ -72,30 +80,115 @@ proc write_powered_verilog {args} {
 
 # "layout": a spice netlist
 # "schematic": a verilog netlist
-proc run_lvs {{layout "$::env(magic_result_file_tag).spice"} {schematic "$::env(CURRENT_NETLIST)"}} {
-    puts_info "Running LVS..."
+proc run_lvs {{layout "$::env(EXT_NETLIST)"} {schematic "$::env(CURRENT_NETLIST)"}} {
+    # LEF LVS output to lvs.lef.log, design.lvs_parsed.lef.log, design.lvs.lef.json, design.lvs.lef.log
+    # GDS LVS output to lvs.gds.log, design.lvs_parsed.gds.log, design.lvs.gds.json, design.lvs.gds.log
+    # GDS LVS uses STD_CELL_LIBRARY spice and 
+    # if defined, additional LVS_EXTRA_STD_CELL_LIBRARY spice and LVS_EXTRA_GATE_LEVEL_VERILOG files
+    if { [info exist ::env(MAGIC_EXT_USE_GDS)] && $::env(MAGIC_EXT_USE_GDS) } {
+        set extract_type gds
+        puts_info "Running GDS LVS..."
+    } else {
+        set extract_type lef
+        puts_info "Running LEF LVS..."
+    }
 
     set layout [subst $layout]
     set schematic [subst $schematic]
 
     set setup_file $::env(NETGEN_SETUP_FILE)
     set module_name $::env(DESIGN_NAME)
-    set output $::env(lvs_result_file_tag).log
+    set output $::env(lvs_result_file_tag).$extract_type.log
+
+    #writes setup_file_*_lvs to tmp directory.
+    set lvs_file [open $::env(TMP_DIR)/lvs/setup_file.$extract_type.lvs w]
+    if { "$extract_type" == "gds" } {
+        if { [info exist ::env(LVS_EXTRA_STD_CELL_LIBRARY)] } {
+            set libs_in $::env(LVS_EXTRA_STD_CELL_LIBRARY)
+            foreach lib_file $libs_in {
+                puts $lvs_file "puts \"Reading spice netlist file $lib_file\""
+                puts $lvs_file "readnet spice $lib_file 1"
+            }
+        } else {
+            if { [info exist ::env(STD_CELL_LIBRARY)] } {
+                set std_cell_source $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/spice/$::env(STD_CELL_LIBRARY).spice
+            } else {
+                set std_cell_source $::env(PDK_ROOT)/$::env(PDK)/libs.ref/sky130_fd_sc_hd/spice/sky130_fd_sc_hd.spice
+            }
+            puts $lvs_file "puts \"Reading spice netlist file $std_cell_source\""
+            puts $lvs_file "readnet spice $std_cell_source 1"
+        }
+        if { [info exist ::env(LVS_EXTRA_GATE_LEVEL_VERILOG)] } {
+            set libs_in $::env(LVS_EXTRA_GATE_LEVEL_VERILOG)
+            foreach lib_file $libs_in {
+                puts $lvs_file "puts \"Reading verilog netlist file $lib_file\""
+                puts $lvs_file "readnet verilog $lib_file 1"
+            }
+        }
+    }
+    puts $lvs_file "lvs {$layout $module_name} {$schematic $module_name} $setup_file $output -json"
+    close $lvs_file
 
     puts_info "$layout against $schematic"
 
-    try_catch netgen -batch lvs \
-      "$layout $module_name" \
-      "$schematic $module_name" \
-      $setup_file \
-      $output \
-      -json |& tee $::env(TERMINAL_OUTPUT) $::env(lvs_log_file_tag).log
+    try_catch netgen -batch source $::env(TMP_DIR)/lvs/setup_file.$extract_type.lvs \
+      |& tee $::env(TERMINAL_OUTPUT) $::env(lvs_log_file_tag).$extract_type.log
 
-    exec python3 $::env(SCRIPTS_DIR)/count_lvs.py -f $::env(lvs_result_file_tag).json \
-      |& tee $::env(TERMINAL_OUTPUT) $::env(lvs_result_file_tag)_parsed.log
+    exec python3 $::env(SCRIPTS_DIR)/count_lvs.py -f $::env(lvs_result_file_tag).$extract_type.json \
+      |& tee $::env(TERMINAL_OUTPUT) $::env(lvs_result_file_tag)_parsed.$extract_type.log
 }
 
 proc run_netgen {args} {
     handle_deprecated_command run_lvs
 }
 package provide openlane 0.9
+
+proc run_lef_cvc {args} {
+    if {$::env(RUN_CVC) == 1 && [file exist $::env(SCRIPTS_DIR)/cvc/$::env(PDK)/cvcrc.$::env(PDK)]} {
+    puts_info "Running CVC"
+    set cvc_power_awk "\
+BEGIN {  # Print power and standard_input definitions
+    print \"$::env(VDD_PIN) power 1.8\";
+    print \"$::env(GND_PIN) power 0.0\";
+    print \"#define std_input min@$::env(GND_PIN) max@$::env(VDD_PIN)\";
+}
+\$1 == \"input\" {  # Print input nets
+    gsub(/;/, \"\"); 
+    if ( \$2 == \"$::env(VDD_PIN)\" || \$2 == \"$::env(GND_PIN)\" ) {  # ignore power nets
+        next;
+    }
+    if ( NF == 3 ) {  # print buses as net\[range\]
+        \$2 = \$3 \$2;
+    }
+    print \$2, \"input std_input\";
+}"
+
+    set cvc_cdl_awk "\
+/Black-box entry subcircuit/ {  # remove black-box defintions
+    while ( \$1 != \".ends\" ) {
+        getline;
+    }
+    getline;
+}
+/^\\\*/ {  # remove comments
+    next;
+}
+/^.ENDS .*/ {  # remove name from ends lines
+    print \$1;
+    next;
+}
+ {
+    print \$0;
+}"
+
+    # Create power file
+    try_catch awk $cvc_power_awk $::env(CURRENT_NETLIST) > $::env(cvc_result_file_tag).power
+    # Create cdl file by combining cdl library with lef spice
+    try_catch awk $cvc_cdl_awk $::env(PDK_ROOT)/$::env(PDK)/libs.ref/$::env(STD_CELL_LIBRARY)/cdl/$::env(STD_CELL_LIBRARY).cdl $::env(magic_result_file_tag).lef.spice \
+        > $::env(cvc_result_file_tag).cdl
+    try_catch cvc $::env(SCRIPTS_DIR)/cvc/$::env(PDK)/cvcrc.$::env(PDK) \
+        |& tee $::env(TERMINAL_OUTPUT) $::env(cvc_log_file_tag)_screen.log
+    } else {
+        puts_info "Skipping CVC"
+    }
+}

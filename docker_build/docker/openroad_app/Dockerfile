@@ -91,7 +91,7 @@ RUN cd / && wget http://lemon.cs.elte.hu/pub/sources/lemon-1.3.1.tar.gz \
     && cd lemon-1.3.1 \
     && cmake -B build . \ 
     && cmake --build build -j $(nproc) --target install
-    
+
 RUN yum install -y gettext-devel help2man texinfo \
     && git clone https://github.com/westes/flex \
     && cd flex \
