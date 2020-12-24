@@ -10,7 +10,7 @@
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
-    - [Installation Notes](#installation-notes) 
+    - [Installation Notes](#installation-notes)
 - [Updating OpenLANE](#updating-openlane)
 - [Setting up OpenLANE](#setting-up-openlane)
     - [Building the OpenLANE Docker](#building-the-openlane-docker)
@@ -29,7 +29,7 @@
 
 # Overview
 
-OpenLANE is an automated RTL to GDSII flow based on several components including OpenROAD, Yosys, Magic, Netgen, Fault, OpenPhySyn, SPEF-Extractor and custom methodology scripts for design exploration and optimization. The flow performs full ASIC implementation steps from RTL all the way down to GDSII - this capability will be released in the coming weeks with completed SoC design examples that have been sent to SkyWater for fabrication.
+OpenLANE is an automated RTL to GDSII flow based on several components including OpenROAD, Yosys, Magic, Netgen, Fault, OpenPhySyn, CVC, SPEF-Extractor and custom methodology scripts for design exploration and optimization. The flow performs full ASIC implementation steps from RTL all the way down to GDSII - this capability will be released in the coming weeks with completed SoC design examples that have been sent to SkyWater for fabrication.
 
 Join the community on [slack](https://invite.skywater.tools)!
 
@@ -76,7 +76,7 @@ After running you'll find a directory added under [./regression_results/](./regr
 
 - the default STD_CELL_LIBRARY is sky130_fd_sc_hd. You can change that by running:
 ```bash
-    export STD_CELL_LIBRARY=<Library name, i.e. sky130_fd_sc_ls> 
+    export STD_CELL_LIBRARY=<Library name, i.e. sky130_fd_sc_ls>
 ```
 - Other options are:
     - sky130_fd_sc_hs
@@ -287,6 +287,33 @@ The following are arguments that can be passed to `flow.tcl`
             Passes a script of interactive commands in interactive mode
         </td>
     </tr>
+    <tr>
+        </tr>
+        <td align="center">
+            <code>-synth_explore</code> <br> (Boolean)
+        </td>
+        <td align="justify">
+            If enabled, synthesis exploration will be run (only synthesis exploration), which will try out the available synthesis strategies against the input design. The output will be the four possible gate level netlists under &lt;run_path/results/synthesis&gt; and a summary report under reports that compares the 4 outputs.
+        </td>
+    </tr>
+    <tr>
+        </tr>
+        <td align="center">
+            <code>-lvs</code> <br> (Boolean)
+        </td>
+        <td align="justify">
+            If enabled, only LVS will be run on the design. in which case the user must also pass: -design DESIGN_DIR -gds DESIGN_GDS -net DESIGN_NETLIST.
+        </td>
+    </tr>
+    <tr>
+        </tr>
+        <td align="center">
+            <code>-drc</code> <br> (Boolean)
+        </td>
+        <td align="justify">
+            If enabled, only DRC will be run on the design. in which case the user must also pass: -design DESIGN_DIR -gds DESIGN_GDS -report OUTPUT_REPORT_PATH -magicrc MAGICRC.
+        </td>
+    </tr>
 </table>
 
 
@@ -335,6 +362,7 @@ OpenLANE flow consists of several stages. By default all flow steps are run in s
 7. **Checks**
     1. `Magic` - Performs DRC Checks & Antenna Checks
     2. `Netgen` - Performs LVS Checks
+    3. `CVC` - Performs Circuit Validity Checks
 
 OpenLANE integrated several key open source tools over the execution stages:
 - RTL Synthesis, Technology Mapping, and Formal Verification : [yosys + abc][4]
@@ -349,6 +377,7 @@ OpenLANE integrated several key open source tools over the execution stages:
 - DRC Checks: [Magic][14]
 - LVS check: [Netgen][22]
 - Antenna Checks: [Magic][14]
+- Circuit Validity Checker: [CVC][31]
 
 ## OpenLANE Output
 
@@ -362,6 +391,7 @@ designs/<design_name>
 │   │   ├── config.tcl
 │   │   ├── logs
 │   │   │   ├── cts
+│   │   │   ├── cvc
 │   │   │   ├── floorplan
 │   │   │   ├── magic
 │   │   │   ├── placement
@@ -369,6 +399,7 @@ designs/<design_name>
 │   │   │   └── synthesis
 │   │   ├── reports
 │   │   │   ├── cts
+│   │   │   ├── cvc
 │   │   │   ├── floorplan
 │   │   │   ├── magic
 │   │   │   ├── placement
@@ -376,6 +407,7 @@ designs/<design_name>
 │   │   │   └── synthesis
 │   │   ├── results
 │   │   │   ├── cts
+│   │   │   ├── cvc
 │   │   │   ├── floorplan
 │   │   │   ├── magic
 │   │   │   ├── placement
@@ -383,6 +415,7 @@ designs/<design_name>
 │   │   │   └── synthesis
 │   │   └── tmp
 │   │       ├── cts
+│   │       ├── cvc
 │   │       ├── floorplan
 │   │       ├── magic
 │   │       ├── placement
@@ -495,3 +528,4 @@ To learn more about Chip Integration. Check this [file][26]
 [28]: https://github.com/scale-lab/OpenPhySyn
 [29]: ./doc/hardening_macros.md
 [30]: ./doc/Manual_PDK_installation.md
+[31]: https://github.com/d-m-bailey/cvc
