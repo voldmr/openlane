@@ -12,7 +12,7 @@ cd OpenROAD
 git apply rails.patch
 git apply pdngen_export_subst.patch
 git apply ignore_obs_outside.patch
-cd src/OpenDB/src/swig/python 
+cd src/OpenDB/src/swig/python
 git apply setup_local.patch
 
 # modify the needed scripts
