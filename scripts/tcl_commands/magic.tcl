@@ -36,7 +36,7 @@ proc run_magic {args} {
 		set ::env(CURRENT_GDS) $::env(magic_result_file_tag).gds
 		file copy -force $::env(MAGIC_MAGICRC) $::env(RESULTS_DIR)/magic/.magicrc
 
-		if { $::env(MAGIC_GENERATE_MAGLEF) || $::env(MAGIC_INCLUDE_GDS_POINTERS) } {
+		if { ($::env(MAGIC_GENERATE_LEF) && $::env(MAGIC_GENERATE_MAGLEF)) || $::env(MAGIC_INCLUDE_GDS_POINTERS) } {
 			# Generate mag file that includes GDS pointers
 			set ::env(MAGTYPE) mag
 			try_catch magic \
@@ -142,7 +142,9 @@ extract no capacitance
 extract no coupling
 extract no resistance
 extract no adjust
-extract unique
+if { ! $::env(LVS_CONNECT_BY_LABEL) } {
+	extract unique
+}
 # extract warn all
 extract
 
@@ -230,7 +232,9 @@ if { ! \[file exists \$::env(DESIGN_NAME).ext\] } {
 	extract no coupling
 	extract no resistance
 	extract no adjust
-	extract unique
+	if { ! $::env(LVS_CONNECT_BY_LABEL) } {
+		extract unique
+	}
 	# extract warn all
 	extract
 	feedback save $::env(magic_log_file_tag)_ext2spice.antenna.feedback.txt
