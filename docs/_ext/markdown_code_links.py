@@ -93,6 +93,8 @@ def process_image_links(app, docname, source):
                     # combine with rest of markdown link
                     link = m.group(0).partition('(')[0] + '(' + link + ')'
                     printv (verb, 2, link)
+                    if str(source[0][m.end()]) == '[':
+                        link += '\n' 
                     source[0] = source[0][:m.start()] + link + source[0][m.end():]
 
         linkexp = linknameexp2 + linktargetexp2.format(fileext=fileext)
@@ -106,5 +108,7 @@ def process_image_links(app, docname, source):
                     # combine with rest of markdown link
                     link = m.group(0).partition(':')[0] + ': ' + link
                     printv (verb, 2, link)
+                    if str(source[0][m.end()]) == '[':
+                        link += '\n' 
                     source[0] = source[0][:m.start()] + link + source[0][m.end():]
 
