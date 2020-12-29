@@ -8,6 +8,7 @@
 # OpenLANE
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.com/efabless/openlane.svg?branch=develop)](https://travis-ci.com/efabless/openlane) [![Documentation Status](https://readthedocs.org/projects/openlane/badge/?version=develop-applied_sphinx)](https://openlane.readthedocs.io/en/develop-applied_sphinx/?badge=develop-applied_sphinx)
 
+
 This documentation is also available at ReadTheDocs [here](https://openlane.readthedocs.io/en/develop-applied_sphinx/).
 
 # Table of contents
