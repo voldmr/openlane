@@ -15,8 +15,4 @@ git apply ignore_obs_outside.patch
 cd src/OpenDB/src/swig/python
 git apply setup_local.patch
 
-# modify the needed scripts
-cp $OPENLANE_DIR/docker_build/docker/openroad_app/or_write_verilog.tcl $OPENLANE_DIR/scripts/openroad/or_write_verilog.tcl
-cp $OPENLANE_DIR/docker_build/docker/openroad_app/or_ioplacer.tcl $OPENLANE_DIR/scripts/openroad/or_ioplacer.tcl
-
 echo "Done preparing OpenROAD"
