@@ -15,9 +15,14 @@
 # syntax = docker/dockerfile:1.0-experimental
 FROM centos:centos7 as build
 
-# RUN useradd -m openlane
-# RUN usermod -aG wheel openlane
-# USER openlane
+# Add a user and a home dir to be able to start GUI apps in a non-root account
+ARG UID=1000
+ARG GID=1000
+ARG USERNAME=openlane
+
+# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN groupadd -g "$GID" "$USERNAME"
+RUN useradd -u "$UID" -g "$GID" "$USERNAME"
 
 # install base dependencies
 # including python 3.6
@@ -41,7 +46,17 @@ RUN yum install -y https://repo.ius.io/ius-release-el$(rpm -E '%{rhel}').rpm && 
 		tcl \
 		tcllib \
 		tk \
-		Xvfb && \
+		Xvfb \
+		libX11 \
+		ncurses \
+		bison \
+		flex \
+		libXpm \
+		libXaw \
+		xcb-util \
+		readline \
+		fftw3 \
+		gtk3 && \
 	yum clean all && \
 	rm -rf /var/cache/yum
 
@@ -84,4 +99,5 @@ RUN cd $OPENROAD/OpenDB_python/ && \
 
 WORKDIR $OPENLANE_ROOT
 
+USER $USERNAME
 CMD /bin/bash
