@@ -23,7 +23,8 @@ ARG USERNAME=openlane
 # ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN groupadd -g "$GID" "$USERNAME"
 RUN useradd -u "$UID" -g "$GID" "$USERNAME"
-
+RUN usermod -aG wheel "$USERNAME"
+RUN echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 # install base dependencies
 # including python 3.6
 RUN yum install -y https://repo.ius.io/ius-release-el$(rpm -E '%{rhel}').rpm && \
@@ -56,7 +57,12 @@ RUN yum install -y https://repo.ius.io/ius-release-el$(rpm -E '%{rhel}').rpm && 
 		xcb-util \
 		readline \
 		fftw3 \
-		gtk3 && \
+		gtk3 \
+		sudo \
+		vim \
+		man \
+		mc \
+		xterm && \
 	yum clean all && \
 	rm -rf /var/cache/yum
 
@@ -100,4 +106,13 @@ RUN cd $OPENROAD/OpenDB_python/ && \
 WORKDIR $OPENLANE_ROOT
 
 USER $USERNAME
-CMD /bin/bash
+RUN mkdir /home/$USERNAME/.xschem
+RUN mkdir /home/$USERNAME/.gaw
+# RUN chown $UID:$GID /home/$USERNAME/.xschem
+# RUN chown $UID:$GID /home/$USERNAME/.gaw
+
+VOLUME [ "/home/$USERNAME/.xschem" ]
+VOLUME [ "/home/$USERNAME/.gaw" ]
+VOLUME [ "/home/$USERNAME/icdesign" ]
+
+WORKDIR /home/$USERNAME

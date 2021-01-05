@@ -43,10 +43,10 @@ pdk: skywater-pdk skywater-library open_pdks build-pdk
 native-pdk: skywater-pdk skywater-library open_pdks native-build-pdk
 
 .PHONY: full-pdk
-full-pdk: skywater-pdk all-skywater-libraries open_pdks build-pdk
+full-pdk: skywater-pdk all-skywater-libraries open_pdks build-pdk analog-libs
 
 .PHONY: native-full-pdk
-native-full-pdk: skywater-pdk all-skywater-libraries open_pdks native-build-pdk
+native-full-pdk: skywater-pdk all-skywater-libraries open_pdks native-build-pdk analog-libs
 
 $(PDK_ROOT)/skywater-pdk:
 	git clone https://github.com/google/skywater-pdk.git $(PDK_ROOT)/skywater-pdk
@@ -88,6 +88,30 @@ open_pdks: $(PDK_ROOT)/open_pdks
 		git checkout master && git pull && \
 		git checkout -qf $(OPEN_PDKS_COMMIT)
 
+### Libraries for analog design
+$(PDK_ROOT)/xschem_sky130:
+	git clone https://github.com/StefanSchippers/xschem_sky130 $(PDK_ROOT)/xschem_sky130
+
+.PHONY: analog-libs
+analog-libs: $(PDK_ROOT)/xschem_sky130
+	cd $(PDK_ROOT)/skywater-pdk && \
+		git submodule update --init libraries/sky130_fd_pr/latest
+	cd $(PDK_ROOT)/xschem_sky130 && \
+		git fetch --all && git reset --hard main && \
+		echo "\n\n\n####    ADDED BY openlane-analog:    ####" >> xschemrc && \
+		echo "set SKYWATER_MODELS $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest" >> xschemrc && \
+		echo "set SKYWATER_STDCELLS $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_sc_hd/latest" >> xschemrc && \
+		echo "set editor { xterm -geometry 100x40 -e vim}" >> xschemrc && \
+		echo "lappend tcl_files \$${XSCHEM_SHAREDIR}/ngspice_backannotate.tcl" >> xschemrc && \
+		echo "lappend tcl_files $(PDK_ROOT)/xschem_sky130/scripts/sky130_models.tcl" >> xschemrc
+		
+	rm -rf $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice
+	cp -a $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice
+	cd $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest &&\
+		patch -p2 < $(PDK_ROOT)/xschem_sky130/sky130_fd_pr.patch
+	echo "set ngbehavior=hs" > ~/.xschem/simulations/.spiceinit
+
+
 .PHONY: build-pdk
 build-pdk: $(PDK_ROOT)/open_pdks $(PDK_ROOT)/skywater-pdk
 	[ -d $(PDK_ROOT)/sky130A ] && \
@@ -120,6 +144,14 @@ native-build-pdk: $(PDK_ROOT)/open_pdks $(PDK_ROOT)/skywater-pdk
 .PHONY: openlane
 openlane:
 	cd $(OPENLANE_DIR)/docker_build && \
+		$(MAKE) merge
+
+.PHONY: openlane-analog
+openlane-analog: analog-libs
+	cd $(OPENLANE_DIR)/docker_build && \
+		$(MAKE) build-xschem && \
+		$(MAKE) build-ngspice && \
+		$(MAKE) build-gaw3 && \
 		$(MAKE) merge
 
 .PHONY: regression
