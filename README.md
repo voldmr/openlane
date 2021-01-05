@@ -64,6 +64,40 @@ After running you'll find a directory added under [./regression_results/](./regr
 
 **Note**: if runtime is `-1`, that means the design failed. Any reported statistics from any run after the failure of the design is reported as `-1` as well.
 
+# Quick Start for Analog Design:
+
+Pull the analog branch from voldmr/openlane fork (TODO: consider making a PR to include it in the efabless/openlane ?):
+
+```bash
+    git clone git@github.com:voldmr/openlane.git --branch analog
+    cd openlane/
+    export PDK_ROOT=<absolute path to where skywater-pdk and open_pdks will reside>
+    make openlane
+    make pdk
+    make openlane-analog
+```
+
+Start the openlane docker container:
+
+```bash
+    ./start_openlane_x.sh
+```
+
+Openlane-analog includes **xschem** for schematic capture, **ngspice** for simulation and **gaw** for waveform viewing, **magic** for layout/LVS/DRC. 
+
+To launch **xschem** run the following in the docker container command prompt:
+
+```bash
+    cd $PDK_ROOT/xschem_sky130/
+    xschem
+```
+
+To launch **magic** run the following in the docker container command prompt:
+```bash
+    cd $PDK_ROOT/sky130A/libs.tech/magic
+    magic -T sky130A
+```
+
 ## Installation Notes:
 
 - The Makefile should do the following when you run the above command:
