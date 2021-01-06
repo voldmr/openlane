@@ -110,7 +110,7 @@ analog-libs: $(PDK_ROOT)/xschem_sky130
 	cd $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest &&\
 		patch -p2 < $(PDK_ROOT)/xschem_sky130/sky130_fd_pr.patch
 	mkdir -p ~/.xschem/simulations && echo "set ngbehavior=hs" > ~/.xschem/simulations/.spiceinit
-	mkdir ~/.gaw
+	mkdir -p ~/.gaw
 
 
 .PHONY: build-pdk

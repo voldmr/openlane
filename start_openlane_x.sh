@@ -7,5 +7,5 @@ docker run -it -v $(pwd):/openLANE_flow -v $PDK_ROOT:$PDK_ROOT \
                --volume="$HOME/.Xauthority:/home/$(id -un)/.Xauthority:rw" \
                --volume="$HOME/.xschem:/home/$(id -un)/.xschem:rw" \
                --volume="$HOME/.gaw:$HOME/.gaw:rw" \
-               --volume="$HOME/icdesign:$HOME/icdesign:rw" \
+               --volume="$(pwd):$HOME/project:rw" \
                openlane:rc6
