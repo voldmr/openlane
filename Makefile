@@ -98,7 +98,7 @@ analog-libs: $(PDK_ROOT)/xschem_sky130
 		git submodule update --init libraries/sky130_fd_pr/latest
 	cd $(PDK_ROOT)/xschem_sky130 && \
 		git fetch --all && git reset --hard main && \
-		echo "\n\n\n####    ADDED BY openlane-analog:    ####" >> xschemrc && \
+		echo "####    ADDED BY openlane-analog:    ####" >> xschemrc && \
 		echo "set SKYWATER_MODELS $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest" >> xschemrc && \
 		echo "set SKYWATER_STDCELLS $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_sc_hd/latest" >> xschemrc && \
 		echo "set editor { xterm -geometry 100x40 -e vim}" >> xschemrc && \
@@ -109,7 +109,8 @@ analog-libs: $(PDK_ROOT)/xschem_sky130
 	cp -a $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice
 	cd $(PDK_ROOT)/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest &&\
 		patch -p2 < $(PDK_ROOT)/xschem_sky130/sky130_fd_pr.patch
-	echo "set ngbehavior=hs" > ~/.xschem/simulations/.spiceinit
+	mkdir -p ~/.xschem/simulations && echo "set ngbehavior=hs" > ~/.xschem/simulations/.spiceinit
+	mkdir ~/.gaw
 
 
 .PHONY: build-pdk
